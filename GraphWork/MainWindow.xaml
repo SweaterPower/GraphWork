@@ -1,0 +1,52 @@
+﻿<Window x:Class="GraphWork.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GraphWork"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525">
+    <Window.Resources>
+        <local:LengthConverter x:Key="LengthConverter" />
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition x:Name="PopupRow" Height="30"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="1" Grid.RowSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Button Content="Vertex" Click="AddVertex"/>
+            <StackPanel Grid.Row="1">
+                <DockPanel LastChildFill="True">
+                    <TextBlock Text="Key: "/>
+                    <TextBox x:Name="TBKey"/>
+                </DockPanel>
+                <DockPanel LastChildFill="True">
+                    <TextBlock Text="Value: "/>
+                    <TextBox x:Name="TBValue"/>
+                </DockPanel>
+            </StackPanel>
+            <Button Content="Edge" Click="AddEdge" Grid.Row="2"/>
+            <StackPanel Grid.Row="3">
+                <ComboBox x:Name="CBFirst"/>
+                <ComboBox x:Name="CBSecond"/>
+            </StackPanel>
+        </Grid>
+        <Canvas x:Name="mainCanvas" Grid.RowSpan="2">
+        </Canvas>
+    </Grid>
+</Window>
