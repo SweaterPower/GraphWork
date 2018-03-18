@@ -59,6 +59,9 @@
     </Compile>
     <Compile Include="CenterConverter.cs" />
     <Compile Include="Edge.cs" />
+    <Compile Include="EditVertexPanel.xaml.cs">
+      <DependentUpon>EditVertexPanel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="GraphContainer.xaml.cs">
       <DependentUpon>GraphContainer.xaml</DependentUpon>
     </Compile>
@@ -67,6 +70,10 @@
       <DependentUpon>Vertex.xaml</DependentUpon>
     </Compile>
     <Page Include="AddVertexPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="EditVertexPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -27,6 +27,29 @@ namespace GraphWork
             InitializeComponent();
             CBFirst.ItemsSource = vertexes;
             CBSecond.ItemsSource = vertexes;
+            AddVertex(this, new RoutedEventArgs());
+            AddVertex(this, new RoutedEventArgs());
+            CreateEdge(1, 2);
+            CreateEdge(1, 2);
+            CreateEdge(1, 2);
+            CreateEdge(1, 2);
+            CreateEdge(1, 2);
+            CreateEdge(1, 2);
+            CreateEdge(1, 2);
+            CreateEdge(1, 2);
+            CreateEdge(1, 2);
+            CreateEdge(1, 2);
+            CreateEdge(1, 2);
+            CreateEdge(1, 2);
+            CreateEdge(1, 2);
+            CreateEdge(1, 2);
+            CreateEdge(1, 2);
+            CreateEdge(1, 2);
+            CreateEdge(1, 2);
+            CreateEdge(1, 2);
+            CreateEdge(1, 2);
+            CreateEdge(1, 2);
+            UpdateSeparation();
         }
 
         private void AddVertex(object sender, RoutedEventArgs e)
@@ -39,7 +62,7 @@ namespace GraphWork
 
         private void AddEdge(object sender, RoutedEventArgs e)
         {
-            CreateEdge((int)CBFirst.SelectedItem,(int)CBSecond.SelectedItem);
+            CreateEdge((int)CBFirst.SelectedItem, (int)CBSecond.SelectedItem);
             UpdateSeparation();
         }
 
@@ -103,8 +126,8 @@ namespace GraphWork
 
         void CreateEdge(int from, int to)
         {
-            from += start-1;
-            to += start-1;
+            from += start - 1;
+            to += start - 1;
             Edge l = new Edge();
 
             CenterConverter cc1 = new CenterConverter();
@@ -119,7 +142,7 @@ namespace GraphWork
             b2.Bindings.Add(new Binding() { Path = new PropertyPath("Y"), Source = mainCanvas.Children[from] });
             b2.Bindings.Add(new Binding() { Path = new PropertyPath(Vertex.ActualHeightProperty.Name), Source = mainCanvas.Children[from] });
 
-            CenterConverter cc3= new CenterConverter();
+            CenterConverter cc3 = new CenterConverter();
             MultiBinding b3 = new MultiBinding();
             b3.Converter = cc3;
             b3.Bindings.Add(new Binding() { Path = new PropertyPath("X"), Source = mainCanvas.Children[to] });
@@ -143,13 +166,17 @@ namespace GraphWork
             l.SetBinding(Edge.X2Property, b3);
             l.SetBinding(Edge.Y2Property, b4);
             l.SetBinding(Edge.GapProperty, bg);
-            l.Stroke = Brushes.Blue;
+            l.Stroke = Brushes.DarkOrange;
             l.HasArrow = true;
-            l.StrokeThickness = 6;
-            l.HeadWidth = 28;
+            l.StrokeThickness = 3;
+            l.HeadWidth = 15;
             l.HeadHeight = 6;
+            l.Curveture = linenum * 100;
+            linenum *= -1;
+            if (linenum <= 0)
+                linenum--;
         }
-
+        int linenum = 0;
         public void Changed(object sender, PropertyChangedEventArgs e)
         {
             Vertex source = sender as Vertex;
