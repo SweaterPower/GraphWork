@@ -30,25 +30,10 @@ namespace GraphWork
             AddVertex(this, new RoutedEventArgs());
             AddVertex(this, new RoutedEventArgs());
             CreateEdge(1, 2);
-            CreateEdge(1, 2);
-            CreateEdge(1, 2);
-            CreateEdge(1, 2);
-            CreateEdge(1, 2);
-            CreateEdge(1, 2);
-            CreateEdge(1, 2);
-            CreateEdge(1, 2);
-            CreateEdge(1, 2);
-            CreateEdge(1, 2);
-            CreateEdge(1, 2);
-            CreateEdge(1, 2);
-            CreateEdge(1, 2);
-            CreateEdge(1, 2);
-            CreateEdge(1, 2);
-            CreateEdge(1, 2);
-            CreateEdge(1, 2);
-            CreateEdge(1, 2);
-            CreateEdge(1, 2);
-            CreateEdge(1, 2);
+            //CreateEdge(1, 2);
+            //CreateEdge(1, 2);
+            //CreateEdge(1, 2);
+            //CreateEdge(1, 2);
             UpdateSeparation();
         }
 
@@ -75,7 +60,7 @@ namespace GraphWork
             List<UIElement> points = new List<UIElement>();
             foreach (var child in mainCanvas.Children)
             {
-                var tmp = child as Edge;
+                var tmp = child as EdgeContainer;
                 if (tmp == null)
                 {
                     points.Add((UIElement)child);
@@ -128,8 +113,10 @@ namespace GraphWork
         {
             from += start - 1;
             to += start - 1;
-            Edge l = new Edge();
+            EdgeContainer l = new EdgeContainer((Vertex)mainCanvas.Children[from], (Vertex)mainCanvas.Children[to]);
+            mainCanvas.Children.Add(l);
 
+            /*
             CenterConverter cc1 = new CenterConverter();
             MultiBinding b1 = new MultiBinding();
             b1.Converter = cc1;
@@ -161,11 +148,11 @@ namespace GraphWork
             bg.Bindings.Add(new Binding() { Path = new PropertyPath(Vertex.ActualHeightProperty.Name), Source = mainCanvas.Children[to] });
 
             mainCanvas.Children.Add(l);
-            l.SetBinding(Edge.X1Property, b1);
-            l.SetBinding(Edge.Y1Property, b2);
-            l.SetBinding(Edge.X2Property, b3);
-            l.SetBinding(Edge.Y2Property, b4);
-            l.SetBinding(Edge.GapProperty, bg);
+            l.SetBinding(EdgeShape.X1Property, b1);
+            l.SetBinding(EdgeShape.Y1Property, b2);
+            l.SetBinding(EdgeShape.X2Property, b3);
+            l.SetBinding(EdgeShape.Y2Property, b4);
+            l.SetBinding(EdgeShape.GapProperty, bg);
             l.Stroke = Brushes.DarkOrange;
             l.HasArrow = true;
             l.StrokeThickness = 3;
@@ -174,9 +161,9 @@ namespace GraphWork
             l.Curveture = linenum * 100;
             linenum *= -1;
             if (linenum <= 0)
-                linenum--;
+                linenum--;*/
         }
-        int linenum = 0;
+        //int linenum = 0;
         public void Changed(object sender, PropertyChangedEventArgs e)
         {
             Vertex source = sender as Vertex;

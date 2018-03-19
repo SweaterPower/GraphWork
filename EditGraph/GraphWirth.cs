@@ -287,17 +287,36 @@ namespace EditGraph
             throw new NotImplementedException();
         }
 
-        public int[][] ToAdjacencyMatrix()
+        public int[,] ToAdjacencyMatrix()
+        {
+            List<int> ids = new List<int>();
+            var v = root;
+            while (v != null)
+            {
+                ids.Add(v.Key);
+                v = v.Next;
+            }
+            int[,] a = new int[ids.Count, ids.Count];
+            v = root;
+            while (v != null)
+            {
+                var t = v.Trail;
+                while (t != null)
+                {
+                    a[ids.IndexOf(v.Key), ids.IndexOf(t.Id.Key)]++;
+                    t = t.Next;
+                }
+                v = v.Next;
+            }
+            return a;
+        }
+
+        public int[,] ToAttainabilityMatrix()
         {
             throw new NotImplementedException();
         }
 
-        public int[][] ToAttainabilityMatrix()
-        {
-            throw new NotImplementedException();
-        }
-
-        public int[][] ToIncidenceMatrix()
+        public int[,] ToIncidenceMatrix()
         {
             throw new NotImplementedException();
         }
