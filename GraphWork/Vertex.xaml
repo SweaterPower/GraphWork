@@ -5,8 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:GraphWork"
              mc:Ignorable="d" 
-             d:DesignHeight="30" d:DesignWidth="30">
-    <Grid Width="30" Height="30">
+             d:DesignHeight="20" d:DesignWidth="20">
+    <Grid Width="20" Height="20">
         <Ellipse x:Name="VertexEl" Fill="DarkBlue"/>
         <Thumb Opacity="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" DragDelta="Thumb_DragDelta"/>
     </Grid>

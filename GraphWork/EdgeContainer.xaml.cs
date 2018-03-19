@@ -14,7 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace GraphWork
-{
+{ //RESET CURVETURE ON DELET
     public partial class EdgeContainer : UserControl
     {
         Vertex from;
@@ -106,6 +106,8 @@ namespace GraphWork
                     linenum++;
                 }
             }
+
+            
         }
 
         public void Add(Vertex first, Vertex second)

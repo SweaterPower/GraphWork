@@ -46,7 +46,7 @@
                 <ComboBox x:Name="CBSecond"/>
             </StackPanel>
         </Grid>
-        <Canvas x:Name="mainCanvas" Grid.RowSpan="2">
-        </Canvas>
+        <local:GraphContainer x:Name="graphContainer" Grid.RowSpan="2">
+        </local:GraphContainer>
     </Grid>
 </Window>

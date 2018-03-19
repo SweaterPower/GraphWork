@@ -125,6 +125,12 @@ namespace GraphWork
 
         #endregion
 
+        public double TopX { get => topX; set => topX = value; }
+        public double TopY { get => topY; set => topY = value; }
+
+        private double topX = 0;
+        private double topY = 0;
+
         #region Privates
 
         private void InternalDrawArrowGeometry(StreamGeometryContext context)
@@ -154,6 +160,8 @@ namespace GraphWork
             double modifier = Math.Sign(Curveture) * 0.25 * width;
             double Bx = Ax + modifier * Math.Cos(b);
             double By = Ay + modifier * Math.Sin(b);
+            topX = Bx;
+            topY = By;
 
             double theta = Math.Atan2(By - Y2, Bx - X2);
             double sint = Math.Sin(theta);
