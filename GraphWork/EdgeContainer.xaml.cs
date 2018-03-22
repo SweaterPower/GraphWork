@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,13 +20,15 @@ namespace GraphWork
     {
         Vertex from;
         Vertex to;
+        Canvas parentCanvas;
         int linenum = 0;
         bool inverted = false;
         bool minus = false;
 
-        public EdgeContainer(Vertex f, Vertex t)
+        public EdgeContainer(Vertex f, Vertex t, Canvas pc)
         {
             InitializeComponent();
+            parentCanvas = pc;
             from = f;
             to = t;
             AddEdge(f, t);
@@ -59,11 +62,11 @@ namespace GraphWork
             b4.Bindings.Add(new Binding() { Path = new PropertyPath("Y"), Source = to });
             b4.Bindings.Add(new Binding() { Path = new PropertyPath(Vertex.ActualHeightProperty.Name), Source = to });
 
-            CenterConverter ccg = new CenterConverter();
-            MultiBinding bg = new MultiBinding();
+            HalfConverter ccg = new HalfConverter();
+            Binding bg = new Binding();
             bg.Converter = ccg;
-            bg.Bindings.Add(new Binding() { Path = new PropertyPath(Canvas.MinWidthProperty), Source = mainCanvas });
-            bg.Bindings.Add(new Binding() { Path = new PropertyPath(Vertex.ActualHeightProperty.Name), Source = to });
+            bg.Path = new PropertyPath(Vertex.ActualWidthProperty);
+            bg.Source = to;
 
             mainCanvas.Children.Add(l);
             l.SetBinding(EdgeShape.X1Property, b1);
@@ -75,6 +78,15 @@ namespace GraphWork
             l.StrokeThickness = 1.5;
             l.HeadWidth = 10;
             l.HeadHeight = 3;
+
+            Binding wi = new Binding();
+            wi.Path = new PropertyPath(EdgeShape.ActualWidthProperty);
+            wi.Source = l;
+            mainCanvas.SetBinding(Canvas.WidthProperty, wi);
+            Binding he = new Binding();
+            he.Path = new PropertyPath(EdgeShape.ActualHeightProperty);
+            he.Source = l;
+            mainCanvas.SetBinding(Canvas.HeightProperty, he);
 
             if (inverted)
             {
@@ -107,12 +119,34 @@ namespace GraphWork
                 }
             }
 
-            
+            EdgeInfo t = new EdgeInfo();
+            t.Text = l.Curveture.ToString();
+            Binding tbX = new Binding();
+            tbX.Source = l;
+            tbX.Path = new PropertyPath(EdgeShape.TopXProperty);
+            Binding tbY = new Binding();
+            tbY.Source = l;
+            tbY.Path = new PropertyPath(EdgeShape.TopYProperty);
+            t.SetBinding(EdgeInfo.eiXProperty, tbX);
+            t.SetBinding(EdgeInfo.eiYProperty, tbY);
+            t.PropertyChanged += Changed;
+            mainCanvas.Children.Add(t);
         }
 
         public void Add(Vertex first, Vertex second)
         {
             AddEdge(first, second);
+        }
+
+        public void Changed(object sender, PropertyChangedEventArgs e)
+        {
+            EdgeInfo source = sender as EdgeInfo;
+            if (source != null)
+                switch (e.PropertyName)
+                {
+                    case "tbX": Canvas.SetLeft(source, source.tbX); break;
+                    case "tbY": Canvas.SetTop(source, source.tbY); break;
+                }
         }
 
         private void mainCanvas_MouseDown(object sender, MouseButtonEventArgs e)

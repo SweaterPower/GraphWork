@@ -45,7 +45,8 @@ namespace GraphWork
         {
             from += start - 1;
             to += start - 1;
-            EdgeContainer l = new EdgeContainer((Vertex)mainCanvas.Children[from], (Vertex)mainCanvas.Children[to]);
+            edges.Add(edges.Count + 1);
+            EdgeContainer l = new EdgeContainer((Vertex)mainCanvas.Children[from], (Vertex)mainCanvas.Children[to], mainCanvas);
             mainCanvas.Children.Add(l);
             UpdateSeparation();
         }

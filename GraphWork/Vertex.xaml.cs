@@ -38,10 +38,6 @@ namespace GraphWork
             OnYChanged += UpdateY;
         }
 
-        public Geometry RenderGeom
-        {
-            get { return VertexEl.RenderedGeometry; }
-        }
         public double X
         {
             get { return (double)GetValue(XProperty); }

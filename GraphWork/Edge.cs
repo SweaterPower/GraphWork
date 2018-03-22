@@ -32,6 +32,8 @@ namespace GraphWork
         public static readonly DependencyProperty HasArrowProperty = DependencyProperty.Register("HasArrow", typeof(bool), typeof(EdgeShape), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.None));
         public static readonly DependencyProperty GapProperty = DependencyProperty.Register("Gap", typeof(double), typeof(EdgeShape), new FrameworkPropertyMetadata(0.0, FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.AffectsMeasure));
         public static readonly DependencyProperty CurvetureProperty = DependencyProperty.Register("Curveture", typeof(double), typeof(EdgeShape), new FrameworkPropertyMetadata(0.0, FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.AffectsMeasure));
+        public static readonly DependencyProperty TopXProperty = DependencyProperty.Register("TopX", typeof(double), typeof(EdgeShape), new FrameworkPropertyMetadata(0.0, FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.AffectsMeasure));
+        public static readonly DependencyProperty TopYProperty = DependencyProperty.Register("TopY", typeof(double), typeof(EdgeShape), new FrameworkPropertyMetadata(0.0, FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.AffectsMeasure));
 
         #endregion
 
@@ -99,6 +101,19 @@ namespace GraphWork
             set { base.SetValue(HasArrowProperty, value); }
         }
 
+        [TypeConverter(typeof(LengthConverter))]
+        public double TopX
+        {
+            get { return (double)base.GetValue(TopXProperty); }
+            set { base.SetValue(TopXProperty, value); }
+        }
+
+        [TypeConverter(typeof(LengthConverter))]
+        public double TopY
+        {
+            get { return (double)base.GetValue(TopYProperty); }
+            set { base.SetValue(TopYProperty, value); }
+        }
         #endregion
 
         #region Overrides
@@ -124,12 +139,6 @@ namespace GraphWork
         }
 
         #endregion
-
-        public double TopX { get => topX; set => topX = value; }
-        public double TopY { get => topY; set => topY = value; }
-
-        private double topX = 0;
-        private double topY = 0;
 
         #region Privates
 
@@ -160,8 +169,8 @@ namespace GraphWork
             double modifier = Math.Sign(Curveture) * 0.25 * width;
             double Bx = Ax + modifier * Math.Cos(b);
             double By = Ay + modifier * Math.Sin(b);
-            topX = Bx;
-            topY = By;
+            TopX = Bx;
+            TopY = By;
 
             double theta = Math.Atan2(By - Y2, Bx - X2);
             double sint = Math.Sin(theta);
