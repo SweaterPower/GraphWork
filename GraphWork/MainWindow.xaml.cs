@@ -27,6 +27,9 @@ namespace GraphWork
             InitializeComponent();
             CBFirst.ItemsSource = graphContainer.vertexes;
             CBSecond.ItemsSource = graphContainer.vertexes;
+            graphContainer.AddVertex();
+            graphContainer.AddVertex();
+            graphContainer.AddEdge(1, 2);
         }
 
         private void AddVertex(object sender, RoutedEventArgs e)

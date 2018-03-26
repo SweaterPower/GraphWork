@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace EditGraph
 {
-    class GraphWirth : IGraph
+    class GraphWirth
     {
         public VertexWirth root;
 
         VertexWirth Find(int key)
         {
             var vertex = root;
-            while (vertex.Next != null)
+            while (vertex != null)
             {
                 if (vertex.Key == key)
                     return vertex;
@@ -59,7 +59,7 @@ namespace EditGraph
             if (f == null) return false;
 
             var t = Find(to);
-            if (f == null) return false;
+            if (t == null) return false;
 
             if (f.Trail == null)
                 f.Trail = new EdgeWirth(t, weight, true);
@@ -85,16 +85,22 @@ namespace EditGraph
 
         public bool AddVertex(int val)
         {
-            root.GetEnd().Next = new VertexWirth(GetKey(), val);
+            VertexWirth v = null;
+            if (root != null)
+                v = root.GetEnd().Next;
+            v = new VertexWirth(GetKey(), val);
             return true;
         }
 
         public bool AddVertex(int key, int val)
         {
+            VertexWirth v = null;
+            if (root != null)
+                v = root.GetEnd().Next;
             var f = Find(key);
             if (f != null) return false;
             RenewKey(key);
-            root.GetEnd().Next = new VertexWirth(key, val);
+            v = new VertexWirth(key, val);
             return true;
         }
 
@@ -224,6 +230,8 @@ namespace EditGraph
 
         public bool DeleteVertex(int key)
         {
+            if (root == null) return false;
+
             var f = Find(key);//находим вершину, которую собираемся удалить
             if (f == null) return false;
 
@@ -318,7 +326,49 @@ namespace EditGraph
 
         public int[,] ToIncidenceMatrix()
         {
-            throw new NotImplementedException();
+            List<int> ids = new List<int>();
+            int countV = 0;
+            int countE = 0;
+            var v = root;
+            while (v != null)
+            {
+                countV++;
+                ids.Add(v.Key);
+                var t = v.Trail;
+                while (t != null)
+                {
+                    countE++;
+                    t = t.Next;
+                }
+                v = v.Next;
+            }
+
+            int[,] a = new int[countV, countE];
+            int i = -1;
+            int j = -1;
+            v = root;
+            while (v != null)
+            {
+                i++;
+                var t = v.Trail;
+                while (t != null)
+                {
+                    j++;
+                    if (t.Direct)
+                    {
+                        a[i, j] = -1;
+                        a[ids.IndexOf(t.Id.Key), j] = 1;
+                    }
+                    else
+                    {
+                        a[i, j] = 1;
+                        a[ids.IndexOf(t.Id.Key), j] = 1;
+                    }
+                    t = t.Next;
+                }
+                v = v.Next;
+            }
+            return a;
         }
 
         public override string ToString()

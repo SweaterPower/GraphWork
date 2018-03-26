@@ -53,7 +53,8 @@ namespace EditGraph
             Console.WriteLine(g.AddDirectEdge(2, 3, 24));
             Console.WriteLine(g.AddUndirectEdge(3, 4, 25));
             Console.WriteLine(g.AddDirectEdge(4, 2, 24));
-            Console.WriteLine(g.AddDirectEdge(2, 2, 24));
+            Console.WriteLine(g.AddDirectEdge(2, 5, 24));
+            Console.ReadKey();
             Console.Write(g.ToString());
             Console.ReadKey();
 
@@ -63,6 +64,16 @@ namespace EditGraph
                 for (int j = 0; j< a.GetLength(1); j++)
                 {
                     Console.Write("{0} ", a[i, j]);
+                }
+                Console.WriteLine();
+            }
+            Console.WriteLine("<><><><><><><><><>");
+            a = g.ToIncidenceMatrix();
+            for (int i = 0; i < a.GetLength(0); i++)
+            {
+                for (int j = 0; j < a.GetLength(1); j++)
+                {
+                    Console.Write("{0,2} ", a[i, j]);
                 }
                 Console.WriteLine();
             }

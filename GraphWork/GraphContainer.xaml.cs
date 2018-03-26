@@ -39,6 +39,8 @@ namespace GraphWork
             v.PropertyChanged += Changed;
             mainCanvas.Children.Add(v);
             UpdateIndexes();
+            v.Info = "Vertex:" + Environment.NewLine + (vertexes.Count - start).ToString();
+            v.Diameter = 60;
         }
 
         public void AddEdge(int from, int to)

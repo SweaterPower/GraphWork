@@ -169,8 +169,9 @@ namespace GraphWork
             double modifier = Math.Sign(Curveture) * 0.25 * width;
             double Bx = Ax + modifier * Math.Cos(b);
             double By = Ay + modifier * Math.Sin(b);
-            TopX = Bx;
-            TopY = By;
+            TopX = Ax + Curveture * 0.32 * Math.Cos(b);
+            TopY = Ay + Curveture * 0.32 * Math.Sin(b);
+            //TopY += Math.Sign(Curveture) * 10;
 
             double theta = Math.Atan2(By - Y2, Bx - X2);
             double sint = Math.Sin(theta);

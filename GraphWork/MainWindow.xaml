@@ -12,7 +12,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
-            <RowDefinition x:Name="PopupRow" Height="30"/>
+            <RowDefinition x:Name="PopupRow" Height="20"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3*"/>
@@ -44,6 +44,13 @@
             <StackPanel Grid.Row="3">
                 <ComboBox x:Name="CBFirst"/>
                 <ComboBox x:Name="CBSecond"/>
+            </StackPanel>
+            <StackPanel Grid.Row="4">
+                <CheckBox x:Name="hasArrow" Content="is direct"/>
+                <DockPanel>
+                    <TextBlock Text="Weight: "/>
+                    <TextBox x:Name="weightTB"/>
+                </DockPanel>
             </StackPanel>
         </Grid>
         <local:GraphContainer x:Name="graphContainer" Grid.RowSpan="2">

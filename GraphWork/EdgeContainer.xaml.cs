@@ -120,7 +120,6 @@ namespace GraphWork
             }
 
             EdgeInfo t = new EdgeInfo();
-            t.Text = l.Curveture.ToString();
             Binding tbX = new Binding();
             tbX.Source = l;
             tbX.Path = new PropertyPath(EdgeShape.TopXProperty);
@@ -131,6 +130,7 @@ namespace GraphWork
             t.SetBinding(EdgeInfo.eiYProperty, tbY);
             t.PropertyChanged += Changed;
             mainCanvas.Children.Add(t);
+            t.Txt = l.Curveture.ToString();
         }
 
         public void Add(Vertex first, Vertex second)

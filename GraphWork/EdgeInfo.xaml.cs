@@ -28,13 +28,6 @@ namespace GraphWork
             OnYChanged += UpdateY;
         }
 
-        string text = "";
-        public string Text
-        {
-            get { return text; }
-            set { text = value; }
-        }
-
         public double tbX
         {
             get { return (double)GetValue(eiXProperty); }
@@ -47,8 +40,15 @@ namespace GraphWork
             set { SetValue(eiYProperty, value); }
         }
 
+        public string Txt
+        {
+            get { return (string)GetValue(TxtProperty); }
+            set { SetValue(TxtProperty, value); }
+        }
+
         public static readonly DependencyProperty eiXProperty;
         public static readonly DependencyProperty eiYProperty;
+        public static readonly DependencyProperty TxtProperty;
 
         private static event ValidateValueCallback OnXChanged;
         private static event ValidateValueCallback OnYChanged;
@@ -82,6 +82,7 @@ namespace GraphWork
         {
             eiXProperty = DependencyProperty.Register("tbX", typeof(double), typeof(EdgeInfo), new PropertyMetadata(10.0, new PropertyChangedCallback(XChanged)));
             eiYProperty = DependencyProperty.Register("tbY", typeof(double), typeof(EdgeInfo), new PropertyMetadata(10.0, new PropertyChangedCallback(YChanged)));
+            TxtProperty = DependencyProperty.Register("Txt", typeof(string), typeof(EdgeInfo), new PropertyMetadata(""));
         }
     }
 }

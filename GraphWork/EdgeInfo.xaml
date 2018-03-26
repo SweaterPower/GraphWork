@@ -5,8 +5,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:GraphWork"
              mc:Ignorable="d" x:Name="EI"
-             d:DesignHeight="100" d:DesignWidth="150">
-    <TextBlock x:Name="mainTB" Width="30" Height="20" Text="{Binding Path=Text, ElementName=EI}" Background="Red">
+             d:DesignHeight="20" d:DesignWidth="30">
+    <StackPanel Width="30" Height="20">
+    <TextBlock x:Name="mainTB"  Text="{Binding Path=Txt, ElementName=EI}" Background="Transparent" FontSize="14" FontWeight="Bold">
             
     </TextBlock>
+    </StackPanel>
 </UserControl>
