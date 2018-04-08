@@ -155,8 +155,8 @@ namespace GraphWork
             Point pt1 = new Point(X1, this.Y1);
             Point pt2 = new Point(X2, this.Y2);
 
-            double height = Math.Sqrt((pt2.X - pt1.X) * (pt2.X - pt1.X) + (pt2.Y - pt1.Y) * (pt2.Y - pt1.Y));
-            double width = Math.Abs(Curveture) * 2.5 + height / 10;
+            //double height = Math.Sqrt((pt2.X - pt1.X) * (pt2.X - pt1.X) + (pt2.Y - pt1.Y) * (pt2.Y - pt1.Y));
+            //double width = Math.Abs(Curveture) * 2.5 + height / 10;
 
             double Ax = (X1 + X2) / 2;
             double Ay = (Y1 + Y2) / 2;
@@ -166,18 +166,19 @@ namespace GraphWork
                 b = Math.PI - b;
                 b *= -1;
             }
-            double modifier = Math.Sign(Curveture) * 0.24 * width;
-            double Bx = Ax + modifier * Math.Cos(b);
-            double By = Ay + modifier * Math.Sin(b);
-            TopX = Ax + Curveture * 0.32 * Math.Cos(b);
-            TopY = Ay + Curveture * 0.32 * Math.Sin(b);
+            double modifier = Curveture * 0.2;
+            double Bx = X1 + modifier * Math.Cos(b);
+            double By = Y1 + modifier * Math.Sin(b);
+            TopX = Ax + modifier * Math.Cos(b);
+            TopY = Ay + modifier * Math.Sin(b);
 
-            double theta = Math.Atan2(By - Y2, Bx - X2);
+            //double length = Math.Sqrt((Bx - X2) * (Bx - X2) + (By - Y2) * (By - Y2));
+            Point ptGap = new Point(X2 - (Gap + 3) * Math.Cos(a), Y2 - (Gap + 3) * Math.Sin(a));
+            ptGap = new Point(ptGap.X + modifier * Math.Cos(b), ptGap.Y + modifier * Math.Sin(b));
+
+            double theta = Math.Atan2(By - ptGap.Y, Bx - ptGap.X);
             double sint = Math.Sin(theta);
             double cost = Math.Cos(theta);
-
-            double length = Math.Sqrt((Bx - X2) * (Bx - X2) + (By - Y2) * (By - Y2));
-            Point ptGap = new Point(X2 + (Bx - X2) * (Gap / length), Y2 + (By - Y2) * (Gap / length));
 
             Point pt3 = new Point(
                 ptGap.X + (HeadWidth * cost - HeadHeight * sint),
@@ -187,16 +188,16 @@ namespace GraphWork
                 ptGap.X + (HeadWidth * cost + HeadHeight * sint),
                 ptGap.Y - (HeadHeight * cost - HeadWidth * sint));
 
-            context.BeginFigure(pt1, true, false);
+            context.BeginFigure(new Point(Bx, By), true, false);
             //context.LineTo(new Point(Bx, By), true, true);
-            //context.LineTo(ptGap, true, true);
+            context.LineTo(ptGap, true, true);
             //context.LineTo(new Point(Bx, By), true, true);
             //context.LineTo(new Point(Ax, Ay), true, true);
             //context.LineTo(pt1, true, true);
-            context.ArcTo(pt2, new Size(height, width), a / Math.PI * 180, false, Curveture > 0 ? SweepDirection.Clockwise : SweepDirection.Counterclockwise, true, true);
+            //context.ArcTo(pt2, new Size(height, width), a / Math.PI * 180, false, Curveture > 0 ? SweepDirection.Clockwise : SweepDirection.Counterclockwise, true, true);
             if (HasArrow)
             {
-                context.LineTo(ptGap, true, true);
+                //context.LineTo(ptGap, true, true);
                 context.LineTo(pt3, true, true);
                 context.LineTo(ptGap, true, true);
                 context.LineTo(pt4, true, true);
