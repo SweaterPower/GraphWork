@@ -25,16 +25,16 @@ namespace GraphWork
         bool inverted = false;
         bool minus = false;
 
-        public EdgeContainer(Vertex f, Vertex t, Canvas pc)
+        public EdgeContainer(Vertex f, Vertex t, Canvas pc, bool direct)
         {
             InitializeComponent();
             parentCanvas = pc;
             from = f;
             to = t;
-            AddEdge(f, t);
+            AddEdge(f, t, direct);
         }
 
-        void AddEdge(Vertex from, Vertex to)
+        void AddEdge(Vertex from, Vertex to, bool direct)
         {
             EdgeShape l = new EdgeShape();
 
@@ -78,6 +78,7 @@ namespace GraphWork
             l.StrokeThickness = 1.5;
             l.HeadWidth = 10;
             l.HeadHeight = 3;
+            l.HasArrow = direct;
 
             Binding wi = new Binding();
             wi.Path = new PropertyPath(EdgeShape.ActualWidthProperty);
@@ -133,9 +134,16 @@ namespace GraphWork
             t.Txt = l.Curveture.ToString();
         }
 
-        public void Add(Vertex first, Vertex second)
+        public void AddFromTo(bool direct)
         {
-            AddEdge(first, second);
+            inverted = false;
+            AddEdge(from, to, direct);
+        }
+
+        public void AddToFrom(bool direct)
+        {
+            inverted = true;
+            AddEdge(to, from, direct);
         }
 
         public void Changed(object sender, PropertyChangedEventArgs e)
@@ -149,18 +157,18 @@ namespace GraphWork
                 }
         }
 
-        private void mainCanvas_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.LeftButton == MouseButtonState.Pressed)
-            {
-                inverted = true;
-                Add(to, from);
-            }
-            else
-            {
-                inverted = false;
-                Add(from, to);
-            }
-        }
+        //private void mainCanvas_MouseDown(object sender, MouseButtonEventArgs e)
+        //{
+        //    if (e.LeftButton == MouseButtonState.Pressed)
+        //    {
+        //        inverted = true;
+        //        Add(to, from);
+        //    }
+        //    else
+        //    {
+        //        inverted = false;
+        //        Add(from, to);
+        //    }
+        //}
     }
 }

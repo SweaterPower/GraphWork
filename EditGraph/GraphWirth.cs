@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace EditGraph
 {
-    class GraphWirth
+    public class GraphWirth
     {
-        public VertexWirth root;
+        VertexWirth root;
 
         VertexWirth Find(int key)
         {
@@ -47,11 +47,7 @@ namespace EditGraph
                 key = k;
             }
         }
-        int GetKey()
-        {
-            key++;
-            return key;
-        }
+        int GetKey() => ++key;
 
         public bool AddDirectEdge(int from, int to, int weight)
         {
@@ -85,22 +81,22 @@ namespace EditGraph
 
         public bool AddVertex(int val)
         {
-            VertexWirth v = null;
             if (root != null)
-                v = root.GetEnd().Next;
-            v = new VertexWirth(GetKey(), val);
+                root.GetEnd().Next = new VertexWirth(GetKey(), val);
+            else
+                root = new VertexWirth(GetKey(), val);
             return true;
         }
 
         public bool AddVertex(int key, int val)
         {
-            VertexWirth v = null;
-            if (root != null)
-                v = root.GetEnd().Next;
             var f = Find(key);
             if (f != null) return false;
             RenewKey(key);
-            v = new VertexWirth(key, val);
+            if (root != null)
+                root.GetEnd().Next = new VertexWirth(key, val);
+            else
+                root = new VertexWirth(key, val);
             return true;
         }
 
@@ -118,6 +114,7 @@ namespace EditGraph
             {
                 if (edge.Id.Key == t.Key)
                 {
+                    if (!edge.Direct) return false;
                     var next = edge.Next;
                     if (previous == null)
                     {
@@ -163,6 +160,7 @@ namespace EditGraph
             {
                 if (edge.Id.Key == t.Key)
                 {
+                    if (edge.Direct) return false;
                     var next = edge.Next;
                     if (previous == null)
                     {
@@ -197,6 +195,7 @@ namespace EditGraph
             {
                 if (edge.Id.Key == f.Key)
                 {
+                    if (edge.Direct) return false;
                     var next = edge.Next;
                     if (previous == null)
                     {
@@ -244,22 +243,22 @@ namespace EditGraph
                     var r = root;
                     while (r.Next != null)//теперь убираем все ребра, которые ведут в эту вершину
                     {
-                            var tmp = r.Trail;//идем по следу
-                            while (tmp != null)
+                        var tmp = r.Trail;//идем по следу
+                        while (tmp != null)
+                        {
+                            if (tmp.Id.Key == f.Key)//нашли ребро в удаляемую вершину
                             {
-                                if (tmp.Id.Key == f.Key)//нашли ребро в удаляемую вершину
+                                if (tmp.Direct)//го его удалим
                                 {
-                                    if (tmp.Direct)//го его удалим
-                                    {
-                                        DeleteDirectEdge(tmp.Id.Key, f.Key);
-                                    }
-                                    else
-                                    {
-                                        DeleteUndirectEdge(tmp.Id.Key, f.Key);
-                                    }
+                                    DeleteDirectEdge(tmp.Id.Key, f.Key);
                                 }
-                                tmp = tmp.Next;
+                                else
+                                {
+                                    DeleteUndirectEdge(tmp.Id.Key, f.Key);
+                                }
                             }
+                            tmp = tmp.Next;
+                        }
                         r = r.Next;
                     }
                     var trail = f.Trail;

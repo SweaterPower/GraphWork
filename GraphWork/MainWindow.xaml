@@ -12,7 +12,6 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
-            <RowDefinition x:Name="PopupRow" Height="20"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3*"/>
@@ -52,6 +51,7 @@
                     <TextBox x:Name="weightTB"/>
                 </DockPanel>
             </StackPanel>
+            <Button Content="Delet" Click="AddEdge" Grid.Row="5"/>
         </Grid>
         <local:GraphContainer x:Name="graphContainer" Grid.RowSpan="2">
         </local:GraphContainer>

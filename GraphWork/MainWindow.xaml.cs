@@ -29,7 +29,9 @@ namespace GraphWork
             CBSecond.ItemsSource = graphContainer.vertexes;
             graphContainer.AddVertex();
             graphContainer.AddVertex();
-            graphContainer.AddEdge(1, 2);
+            graphContainer.AddEdge(1, 2, hasArrow.IsChecked.Value);
+            CBFirst.SelectedIndex = 0;
+            CBSecond.SelectedIndex = 1;
         }
 
         private void AddVertex(object sender, RoutedEventArgs e)
@@ -39,7 +41,9 @@ namespace GraphWork
 
         private void AddEdge(object sender, RoutedEventArgs e)
         {
-            graphContainer.AddEdge((int)CBFirst.SelectedItem, (int)CBSecond.SelectedItem);
+            graphContainer.AddEdge((int)CBFirst.SelectedItem, (int)CBSecond.SelectedItem, hasArrow.IsChecked.Value);
+            CBFirst.SelectedIndex = 0;
+            CBSecond.SelectedIndex = 1;
         }
     }
 }

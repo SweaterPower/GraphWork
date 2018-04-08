@@ -39,22 +39,58 @@ namespace GraphWork
             v.PropertyChanged += Changed;
             mainCanvas.Children.Add(v);
             UpdateIndexes();
-            v.Info = "Vertex:" + Environment.NewLine + (vertexes.Count - start).ToString();
+            v.Info = "Vertex:" + Environment.NewLine + (vertexes.Count).ToString();
             v.Diameter = 60;
         }
 
-        public void AddEdge(int from, int to)
+        public void AddEdge(int from, int to, bool direct)
         {
-            from += start - 1;
-            to += start - 1;
-            edges.Add(edges.Count + 1);
-            EdgeContainer l = new EdgeContainer((Vertex)mainCanvas.Children[from], (Vertex)mainCanvas.Children[to], mainCanvas);
-            mainCanvas.Children.Add(l);
-            UpdateSeparation();
+            var e = (edges.Keys.FirstOrDefault((a) => { return a.Item1 == from && a.Item2 == to; }));
+            if (e == null)
+            {
+                EdgeContainer l = new EdgeContainer((Vertex)mainCanvas.Children[from + start - 1], (Vertex)mainCanvas.Children[to+ start - 1], mainCanvas, direct);
+                mainCanvas.Children.Add(l);
+                edges.Add(new Tuple<int, int>(from, to), new Tuple<EdgeContainer, bool>(l, true));
+                edges.Add(new Tuple<int, int>(to, from), new Tuple<EdgeContainer, bool>(l, false));
+                UpdateSeparation();
+            }
+            else
+            {
+                var k = edges[e];
+                if (k.Item2)
+                {
+                    k.Item1.AddFromTo(direct);
+                }
+                else
+                {
+                    k.Item1.AddToFrom(direct);
+                }
+            }
         }
 
+        //public void DeleteEdge()
+        //{
+        //    var e = (edges.Keys.FirstOrDefault((a) => { return a.Item1 == from && a.Item2 == to; }));
+        //    if (e == null)
+        //    {
+        //        MessageBox.Show("No such edge...");
+        //    }
+        //    else
+        //    {
+        //        var k = edges[e];
+        //        if (k.Item2)
+        //        {
+        //            k.Item1.AddFromTo(direct);
+        //        }
+        //        else
+        //        {
+        //            k.Item1.AddToFrom(direct);
+        //        }
+        //    }
+        //}
+
         public ObservableCollection<int> vertexes = new ObservableCollection<int>();
-        public ObservableCollection<int> edges = new ObservableCollection<int>();
+        public SortedDictionary<Tuple<int, int>, Tuple<EdgeContainer, bool>> edges = new SortedDictionary<Tuple<int, int>, Tuple<EdgeContainer, bool>>();
         int start = 0;
 
         void UpdateSeparation()

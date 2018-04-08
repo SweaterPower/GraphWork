@@ -156,7 +156,7 @@ namespace GraphWork
             Point pt2 = new Point(X2, this.Y2);
 
             double height = Math.Sqrt((pt2.X - pt1.X) * (pt2.X - pt1.X) + (pt2.Y - pt1.Y) * (pt2.Y - pt1.Y));
-            double width = Math.Abs(Curveture) * 2.5;// + height * (Math.Abs(Curveture / 100));
+            double width = Math.Abs(Curveture) * 2.5 + height / 10;
 
             double Ax = (X1 + X2) / 2;
             double Ay = (Y1 + Y2) / 2;
@@ -166,12 +166,11 @@ namespace GraphWork
                 b = Math.PI - b;
                 b *= -1;
             }
-            double modifier = Math.Sign(Curveture) * 0.25 * width;
+            double modifier = Math.Sign(Curveture) * 0.24 * width;
             double Bx = Ax + modifier * Math.Cos(b);
             double By = Ay + modifier * Math.Sin(b);
             TopX = Ax + Curveture * 0.32 * Math.Cos(b);
             TopY = Ay + Curveture * 0.32 * Math.Sin(b);
-            //TopY += Math.Sign(Curveture) * 10;
 
             double theta = Math.Atan2(By - Y2, Bx - X2);
             double sint = Math.Sin(theta);
