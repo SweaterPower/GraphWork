@@ -38,10 +38,6 @@ namespace GraphWork
             OnYChanged += UpdateY;
         }
 
-        public Geometry RenderGeom
-        {
-            get { return VertexEl.RenderedGeometry; }
-        }
         public double X
         {
             get { return (double)GetValue(XProperty); }
@@ -54,8 +50,22 @@ namespace GraphWork
             set { SetValue(YProperty, value); }
         }
 
+        public double Diameter
+        {
+            get { return (double)GetValue(DiameterProperty); }
+            set { SetValue(DiameterProperty, value); }
+        }
+
+        public string Info
+        {
+            get { return (string)GetValue(TextProperty); }
+            set { SetValue(TextProperty, value); }
+        }
+
         public static readonly DependencyProperty XProperty;
         public static readonly DependencyProperty YProperty;
+        public static readonly DependencyProperty DiameterProperty;
+        public static readonly DependencyProperty TextProperty;
 
         private static event ValidateValueCallback OnXChanged;
         private static event ValidateValueCallback OnYChanged;
@@ -89,6 +99,8 @@ namespace GraphWork
         {
             XProperty = DependencyProperty.Register("X", typeof(double), typeof(Vertex), new PropertyMetadata(10.0, new PropertyChangedCallback(XChanged)));
             YProperty = DependencyProperty.Register("Y", typeof(double), typeof(Vertex), new PropertyMetadata(10.0, new PropertyChangedCallback(YChanged)));
+            DiameterProperty = DependencyProperty.Register("Diameter", typeof(double), typeof(Vertex), new PropertyMetadata(20.0));
+            TextProperty = DependencyProperty.Register("Info", typeof(string), typeof(Vertex));
         }
 
         private void Thumb_DragDelta(object sender, System.Windows.Controls.Primitives.DragDeltaEventArgs e)

@@ -4,10 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:GraphWork"
-             mc:Ignorable="d" 
-             d:DesignHeight="30" d:DesignWidth="30">
-    <Grid Width="30" Height="30">
-        <Ellipse x:Name="VertexEl" Fill="DarkBlue"/>
-        <Thumb Opacity="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" DragDelta="Thumb_DragDelta"/>
-    </Grid>
+             mc:Ignorable="d"  x:Name="vertex"
+             d:DesignHeight="20" d:DesignWidth="20">
+    <Canvas Width="{Binding ElementName=vertex, Path=Diameter}" Height="{Binding ElementName=vertex, Path=Diameter}">
+        <Ellipse Width="{Binding ElementName=vertex, Path=Diameter}" Height="{Binding ElementName=vertex, Path=Diameter}" x:Name="VertexEl" Fill="Orange"/>
+        <!--TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" 
+                   Text="{Binding ElementName=vertex, Path=Info}" Foreground="Black"
+                   Width="{Binding ElementName=vertex, Path=Diameter}" Height="{Binding ElementName=vertex, Path=Diameter}" TextWrapping="Wrap"/-->
+        <Button Content="{Binding ElementName=vertex, Path=Info}" Width="{Binding ElementName=vertex, Path=Diameter}" Height="{Binding ElementName=vertex, Path=Diameter}" Background="{x:Null}" BorderBrush="{x:Null}"/>
+        <Thumb Width="{Binding ElementName=vertex, Path=Diameter}" Height="{Binding ElementName=vertex, Path=Diameter}" Opacity="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" DragDelta="Thumb_DragDelta"/>
+    </Canvas>
 </UserControl>

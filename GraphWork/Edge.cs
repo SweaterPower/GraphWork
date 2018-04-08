@@ -10,7 +10,7 @@ using System.Windows.Shapes;
 
 namespace GraphWork
 {
-    class Edge : Shape
+    class EdgeShape : Shape
     {
         /*TODO:
          цвет линии
@@ -23,14 +23,17 @@ namespace GraphWork
 
         #region Dependency Properties
 
-        public static readonly DependencyProperty X1Property = DependencyProperty.Register("X1", typeof(double), typeof(Edge), new FrameworkPropertyMetadata(0.0, FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.AffectsMeasure));
-        public static readonly DependencyProperty Y1Property = DependencyProperty.Register("Y1", typeof(double), typeof(Edge), new FrameworkPropertyMetadata(0.0, FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.AffectsMeasure));
-        public static readonly DependencyProperty X2Property = DependencyProperty.Register("X2", typeof(double), typeof(Edge), new FrameworkPropertyMetadata(0.0, FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.AffectsMeasure));
-        public static readonly DependencyProperty Y2Property = DependencyProperty.Register("Y2", typeof(double), typeof(Edge), new FrameworkPropertyMetadata(0.0, FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.AffectsMeasure));
-        public static readonly DependencyProperty HeadWidthProperty = DependencyProperty.Register("HeadWidth", typeof(double), typeof(Edge), new FrameworkPropertyMetadata(0.0, FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.AffectsMeasure));
-        public static readonly DependencyProperty HeadHeightProperty = DependencyProperty.Register("HeadHeight", typeof(double), typeof(Edge), new FrameworkPropertyMetadata(0.0, FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.AffectsMeasure));
-        public static readonly DependencyProperty HasArrowProperty = DependencyProperty.Register("HasArrow", typeof(bool), typeof(Edge), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.None));
-        public static readonly DependencyProperty GapProperty = DependencyProperty.Register("Gap", typeof(double), typeof(Edge), new FrameworkPropertyMetadata(0.0, FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.AffectsMeasure));
+        public static readonly DependencyProperty X1Property = DependencyProperty.Register("X1", typeof(double), typeof(EdgeShape), new FrameworkPropertyMetadata(0.0, FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.AffectsMeasure));
+        public static readonly DependencyProperty Y1Property = DependencyProperty.Register("Y1", typeof(double), typeof(EdgeShape), new FrameworkPropertyMetadata(0.0, FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.AffectsMeasure));
+        public static readonly DependencyProperty X2Property = DependencyProperty.Register("X2", typeof(double), typeof(EdgeShape), new FrameworkPropertyMetadata(0.0, FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.AffectsMeasure));
+        public static readonly DependencyProperty Y2Property = DependencyProperty.Register("Y2", typeof(double), typeof(EdgeShape), new FrameworkPropertyMetadata(0.0, FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.AffectsMeasure));
+        public static readonly DependencyProperty HeadWidthProperty = DependencyProperty.Register("HeadWidth", typeof(double), typeof(EdgeShape), new FrameworkPropertyMetadata(0.0, FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.AffectsMeasure));
+        public static readonly DependencyProperty HeadHeightProperty = DependencyProperty.Register("HeadHeight", typeof(double), typeof(EdgeShape), new FrameworkPropertyMetadata(0.0, FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.AffectsMeasure));
+        public static readonly DependencyProperty HasArrowProperty = DependencyProperty.Register("HasArrow", typeof(bool), typeof(EdgeShape), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.None));
+        public static readonly DependencyProperty GapProperty = DependencyProperty.Register("Gap", typeof(double), typeof(EdgeShape), new FrameworkPropertyMetadata(0.0, FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.AffectsMeasure));
+        public static readonly DependencyProperty CurvetureProperty = DependencyProperty.Register("Curveture", typeof(double), typeof(EdgeShape), new FrameworkPropertyMetadata(0.0, FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.AffectsMeasure));
+        public static readonly DependencyProperty TopXProperty = DependencyProperty.Register("TopX", typeof(double), typeof(EdgeShape), new FrameworkPropertyMetadata(0.0, FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.AffectsMeasure));
+        public static readonly DependencyProperty TopYProperty = DependencyProperty.Register("TopY", typeof(double), typeof(EdgeShape), new FrameworkPropertyMetadata(0.0, FrameworkPropertyMetadataOptions.AffectsRender | FrameworkPropertyMetadataOptions.AffectsMeasure));
 
         #endregion
 
@@ -85,12 +88,32 @@ namespace GraphWork
             set { base.SetValue(GapProperty, value); }
         }
 
+        [TypeConverter(typeof(LengthConverter))]
+        public double Curveture
+        {
+            get { return (double)base.GetValue(CurvetureProperty); }
+            set { base.SetValue(CurvetureProperty, value); }
+        }
+
         public bool HasArrow
         {
             get { return (bool)base.GetValue(HasArrowProperty); }
             set { base.SetValue(HasArrowProperty, value); }
         }
 
+        [TypeConverter(typeof(LengthConverter))]
+        public double TopX
+        {
+            get { return (double)base.GetValue(TopXProperty); }
+            set { base.SetValue(TopXProperty, value); }
+        }
+
+        [TypeConverter(typeof(LengthConverter))]
+        public double TopY
+        {
+            get { return (double)base.GetValue(TopYProperty); }
+            set { base.SetValue(TopYProperty, value); }
+        }
         #endregion
 
         #region Overrides
@@ -121,10 +144,6 @@ namespace GraphWork
 
         private void InternalDrawArrowGeometry(StreamGeometryContext context)
         {
-            double theta = Math.Atan2(Y1 - Y2, X1 - X2);
-            double sint = Math.Sin(theta);
-            double cost = Math.Cos(theta);
-
             double k = (-1 * (Y1 - Y2)) / (X2 - X1);
             double a = Math.Atan(k);
             if (X1 > X2)
@@ -132,24 +151,52 @@ namespace GraphWork
                 a = Math.PI - a;
                 a *= -1;
             }
-            Point ptGap;
-                ptGap = new Point(X2 - (Gap+3) * Math.Cos(a), Y2 - (Gap+3) * Math.Sin(a));
 
             Point pt1 = new Point(X1, this.Y1);
-            //Point pt2 = new Point(X2, this.Y2);
+            Point pt2 = new Point(X2, this.Y2);
+
+            double height = Math.Sqrt((pt2.X - pt1.X) * (pt2.X - pt1.X) + (pt2.Y - pt1.Y) * (pt2.Y - pt1.Y));
+            double width = Math.Abs(Curveture) * 2.5 + height / 10;
+
+            double Ax = (X1 + X2) / 2;
+            double Ay = (Y1 + Y2) / 2;
+            double b = Math.Atan(-1 / (-1 * (Y1 - Y2) / (X2 - X1)));
+            if (Y1 >= Ay)
+            {
+                b = Math.PI - b;
+                b *= -1;
+            }
+            double modifier = Math.Sign(Curveture) * 0.24 * width;
+            double Bx = Ax + modifier * Math.Cos(b);
+            double By = Ay + modifier * Math.Sin(b);
+            TopX = Ax + Curveture * 0.32 * Math.Cos(b);
+            TopY = Ay + Curveture * 0.32 * Math.Sin(b);
+
+            double theta = Math.Atan2(By - Y2, Bx - X2);
+            double sint = Math.Sin(theta);
+            double cost = Math.Cos(theta);
+
+            double length = Math.Sqrt((Bx - X2) * (Bx - X2) + (By - Y2) * (By - Y2));
+            Point ptGap = new Point(X2 + (Bx - X2) * (Gap / length), Y2 + (By - Y2) * (Gap / length));
 
             Point pt3 = new Point(
-                X2 + (HeadWidth * cost - HeadHeight * sint),
-                Y2 + (HeadWidth * sint + HeadHeight * cost));
+                ptGap.X + (HeadWidth * cost - HeadHeight * sint),
+                ptGap.Y + (HeadWidth * sint + HeadHeight * cost));
 
             Point pt4 = new Point(
-                X2 + (HeadWidth * cost + HeadHeight * sint),
-                Y2 - (HeadHeight * cost - HeadWidth * sint));
+                ptGap.X + (HeadWidth * cost + HeadHeight * sint),
+                ptGap.Y - (HeadHeight * cost - HeadWidth * sint));
 
             context.BeginFigure(pt1, true, false);
-            context.LineTo(ptGap, true, true);
+            //context.LineTo(new Point(Bx, By), true, true);
+            //context.LineTo(ptGap, true, true);
+            //context.LineTo(new Point(Bx, By), true, true);
+            //context.LineTo(new Point(Ax, Ay), true, true);
+            //context.LineTo(pt1, true, true);
+            context.ArcTo(pt2, new Size(height, width), a / Math.PI * 180, false, Curveture > 0 ? SweepDirection.Clockwise : SweepDirection.Counterclockwise, true, true);
             if (HasArrow)
             {
+                context.LineTo(ptGap, true, true);
                 context.LineTo(pt3, true, true);
                 context.LineTo(ptGap, true, true);
                 context.LineTo(pt4, true, true);

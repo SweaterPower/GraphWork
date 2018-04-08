@@ -15,11 +15,11 @@ namespace EditGraph
         bool AddUndirectEdge(int from, int to, int weight);
         bool DeleteDirectEdge(int from, int to);
         bool DeleteUndirectEdge(int from, int to);
-        int[][] ToAdjacencyMatrix(); // строки/столбцы соответствуют вершинам      отсортированным по key
+        int[,] ToAdjacencyMatrix(); // строки/столбцы соответствуют вершинам      отсортированным по key
                                      // отсутствие ребра можно обозначать нулем
-        int[][] ToIncidenceMatrix();
+        int[,] ToIncidenceMatrix();
         // int[][] ToAccessibilityMatrix(); Accessibility не о том оказалась
-        int[][] ToAttainabilityMatrix();
+        int[,] ToAttainabilityMatrix();
         Tuple<int, int>[] ToAdjacencyList();
 
     }
