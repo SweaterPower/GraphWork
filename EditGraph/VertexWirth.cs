@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EditGraph
 {
-    class VertexWirth
+    public class VertexWirth
     {
         public readonly int Key;
 

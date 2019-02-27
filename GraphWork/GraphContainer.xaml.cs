@@ -3,17 +3,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using EditGraph;
 
 namespace GraphWork
@@ -32,9 +23,10 @@ namespace GraphWork
         public GraphContainer()
         {
             InitializeComponent();
+            graph = new GraphWirth(1);
         }
 
-        public void AddVertex()
+        void AddVertexVisual(int value)
         {
             Vertex v = new Vertex();
             v.PropertyChanged += Changed;
@@ -44,12 +36,12 @@ namespace GraphWork
             v.Diameter = 60;
         }
 
-        public void AddEdge(int from, int to, bool direct)
+        void AddEdgeVisual(int from, int to, bool direct)
         {
             var e = (edges.Keys.FirstOrDefault((a) => { return a.Item1 == from && a.Item2 == to; }));
             if (e == null)
             {
-                EdgeContainer l = new EdgeContainer((Vertex)mainCanvas.Children[from + start - 1], (Vertex)mainCanvas.Children[to+ start - 1], mainCanvas, direct);
+                EdgeContainer l = new EdgeContainer((Vertex)mainCanvas.Children[from + start - 1], (Vertex)mainCanvas.Children[to + start - 1], mainCanvas, direct);
                 mainCanvas.Children.Add(l);
                 edges.Add(new Tuple<int, int>(from, to), new Tuple<EdgeContainer, bool>(l, true));
                 edges.Add(new Tuple<int, int>(to, from), new Tuple<EdgeContainer, bool>(l, false));
@@ -69,7 +61,7 @@ namespace GraphWork
             }
         }
 
-        public void DeleteEdge(int from, int to)
+        void DeleteEdge(int from, int to)
         {
             var e = (edges.Keys.FirstOrDefault((a) => { return a.Item1 == from && a.Item2 == to; }));
             if (e == null)
@@ -82,19 +74,60 @@ namespace GraphWork
             }
         }
 
-        public void DeleteVertex(int id)
+        void DeleteVertex(int id)
         {
             vertexes.Remove(id);
         }
 
-        GraphWirth root;
+        GraphWirth graph;
         public ObservableCollection<int> vertexes = new ObservableCollection<int>();
         public SortedDictionary<Tuple<int, int>, Tuple<EdgeContainer, bool>> edges = new SortedDictionary<Tuple<int, int>, Tuple<EdgeContainer, bool>>();
         int start = 0;
 
+        public void AddVertex()
+        {
+            graph.AddVertex(vertexes.Count + 1);
+            VisualiseGraph();
+        }
+
+        public void AddVertex(int value)
+        {
+            graph.AddVertex(value);
+            VisualiseGraph();
+        }
+
+        public void AddEdge(int from, int to, bool direct)
+        {
+            if (direct)
+                graph.AddDirectEdge(from, to, 0);
+            else
+                graph.AddUndirectEdge(from, to, 0);
+            VisualiseGraph();
+        }
+
         void VisualiseGraph()
         {
-
+            mainCanvas.Children.Clear();
+            vertexes.Clear();
+            edges.Clear();
+            var root = graph.root;
+            while (root != null)
+            {
+                AddVertexVisual(root.Value);
+                root = root.Next;
+            }
+            root = graph.root;
+            while (root != null)
+            {
+                var trail = root.Trail;
+                while (trail != null)
+                {
+                    AddEdgeVisual(root.Key, trail.Id.Key, trail.Direct);
+                    trail = trail.Next;
+                }
+                root = root.Next;
+            }
+            UpdateSeparation();
         }
 
         void UpdateSeparation()
@@ -113,6 +146,7 @@ namespace GraphWork
                     lines.Add((UIElement)child);
                 }
             }
+            Random rnd = new Random();
             mainCanvas.Children.Clear();
             foreach (var line in lines)
             {
@@ -122,6 +156,12 @@ namespace GraphWork
             foreach (var point in points)
             {
                 mainCanvas.Children.Add(point);
+                var vertex = point as Vertex;
+                if (vertex != null)
+                {
+                    vertex.X = rnd.NextDouble() * (mainCanvas.ActualWidth - 50);
+                    vertex.Y = rnd.NextDouble() * (mainCanvas.ActualHeight - 50);
+                }
             }
             UpdateIndexes();
         }
@@ -143,8 +183,42 @@ namespace GraphWork
             if (source != null)
                 switch (e.PropertyName)
                 {
-                    case "X": Canvas.SetLeft(source, source.X); break;
-                    case "Y": Canvas.SetTop(source, source.Y); break;
+                    case "X":
+                        if (source.X > 0)
+                        {
+                            Canvas.SetLeft(source, source.X);
+                        }
+                        else
+                        {
+                            source.X = 0;
+                        }
+                        if (source.X + source.ActualWidth < mainCanvas.ActualWidth)
+                        {
+                            Canvas.SetLeft(source, source.X);
+                        }
+                        else
+                        {
+                            source.X = mainCanvas.ActualWidth - source.ActualWidth;
+                        }
+                        break;
+                    case "Y":
+                        if (source.Y > 0)
+                        {
+                            Canvas.SetTop(source, source.Y);
+                        }
+                        else
+                        {
+                            source.Y = 0;
+                        }
+                        if (source.Y + source.ActualHeight < mainCanvas.ActualHeight)
+                        {
+                            Canvas.SetTop(source, source.Y);
+                        }
+                        else
+                        {
+                            source.Y = mainCanvas.ActualHeight - source.ActualHeight;
+                        }
+                        break;
                 }
         }
     }

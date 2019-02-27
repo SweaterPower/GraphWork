@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EditGraph
 {
-    class EdgeWirth
+    public class EdgeWirth
     {
         public VertexWirth Id;
 

@@ -83,16 +83,21 @@ namespace EditGraph
         static void Test3()
         {
             GraphWirth g = new GraphWirth();
-            Console.WriteLine(g.AddVertex(15));
-            Console.WriteLine(g.AddVertex(20));
-            Console.WriteLine(g.AddVertex(25));
-            Console.WriteLine(g.AddDirectEdge(1, 2, 21));
-            Console.WriteLine(g.AddDirectEdge(2, 3, 22));
-            Console.WriteLine(g.AddDirectEdge(3, 4, 23));
-            Console.WriteLine(g.AddDirectEdge(4, 1, 23));
-            Console.WriteLine(g.AddUndirectEdge(1, 3, 25));
-            Console.WriteLine(g.AddUndirectEdge(2, 4, 24));
-            Console.WriteLine(g.DeleteUndirectEdge(2, 4));
+            //Console.WriteLine(g.AddVertex(15));
+            //Console.WriteLine(g.AddVertex(20));
+            //Console.WriteLine(g.AddVertex(25));
+            //Console.WriteLine(g.AddDirectEdge(1, 2, 21));
+            //Console.WriteLine(g.AddDirectEdge(2, 3, 22));
+            //Console.WriteLine(g.AddDirectEdge(3, 4, 23));
+            //Console.WriteLine(g.AddDirectEdge(4, 1, 23));
+            //Console.WriteLine(g.AddUndirectEdge(1, 3, 25));
+            //Console.WriteLine(g.AddUndirectEdge(2, 4, 24));
+            //Console.WriteLine(g.DeleteUndirectEdge(2, 4));
+            Console.WriteLine(g.AddVertex(2));
+            Console.WriteLine(g.AddVertex(3));
+            Console.WriteLine(g.AddDirectEdge(1, 2, 0));
+            Console.WriteLine(g.AddDirectEdge(2, 3, 0));
+            Console.WriteLine(g.AddDirectEdge(1, 3, 0));
             Console.Write(g.ToString());
 
             Console.WriteLine("Incidence Matrix:");

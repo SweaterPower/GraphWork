@@ -8,7 +8,7 @@ namespace EditGraph
 {
     public class GraphWirth
     {
-        VertexWirth root;
+        public VertexWirth root;
 
         VertexWirth Find(int key)
         {
@@ -308,12 +308,26 @@ namespace EditGraph
                 v = v.Next;
             }
             int[,] a = new int[ids.Count, ids.Count];
+            List<int> undirectEdgesF = new List<int>();
+            List<int> undirectEdgesT = new List<int>();
             v = root;
             while (v != null)
             {
                 var t = v.Trail;
                 while (t != null)
                 {
+                    if (!t.Direct)
+                        if (undirectEdgesF.Contains(t.Id.Key))
+                            if (undirectEdgesT.Contains(t.Id.Key))
+                            {
+                                t = t.Next;
+                                break;
+                            }
+                    if (t.Direct)
+                    {
+                        undirectEdgesF.Add(v.Key);
+                        undirectEdgesT.Add(t.Id.Key);
+                    }
                     a[ids.IndexOf(v.Key), ids.IndexOf(t.Id.Key)]++;
                     t = t.Next;
                 }
@@ -378,6 +392,14 @@ namespace EditGraph
                 for (int j = 0; j < adj.GetLength(1); j++)
                 {
                     adj[i, j] += adj2[i, j] + adj3[i, j] + adj4[i, j];
+                }
+            }
+
+            for (int i = 0; i < adj.GetLength(0); i++)
+            {
+                for (int j = 0; j < adj.GetLength(1); j++)
+                {
+                    adj[i, j] = adj[i, j] == 0 ? 0 : 1;
                 }
             }
 
