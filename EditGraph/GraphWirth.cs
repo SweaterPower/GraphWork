@@ -76,6 +76,10 @@ namespace EditGraph
                 f.Trail = new EdgeWirth(t, weight, false);
             else
                 f.Trail.GetEnd().Next = new EdgeWirth(t, weight, false);
+            if (t.Trail == null)
+                t.Trail = new EdgeWirth(f, weight, false);
+            else
+                t.Trail.GetEnd().Next = new EdgeWirth(f, weight, false);
             return true;
         }
 
@@ -184,7 +188,7 @@ namespace EditGraph
                             previous.Next = next;
                         }
                     }
-                    return true;
+                    break;
                 }
                 previous = edge;
                 edge = edge.Next;
@@ -318,9 +322,66 @@ namespace EditGraph
             return a;
         }
 
+        public static int[,] MultiplicationMatrixD(int[,] a, int[,] b)
+        {
+            if (a.GetLength(1) != b.GetLength(0)) { throw new Exception("Матрицы нельзя перемножить"); }
+
+            int ma = a.GetLength(0);
+            int mb = b.GetLength(0);
+            int nb = b.GetLength(1);
+
+            int[,] r = new int[ma, nb];
+
+            for (int i = 0; i < a.GetLength(0); i++)
+            {
+                for (int j = 0; j < nb; j++)
+                {
+                    r[i, j] = 0;
+                    for (int k = 0; k < mb; k++)
+                    {
+                        r[i, j] += a[i, k] * b[k, j];
+                    }
+                }
+            }
+            return r;
+        }
+
+        public void OutputMatrix(int[,] a)
+        {
+            Console.WriteLine("----------------------");
+            for (int i = 0; i < a.GetLength(0); i++)
+            {
+                for (int j = 0; j < a.GetLength(1); j++)
+                {
+                    Console.Write("{0} ", a[i, j]);
+                }
+                Console.WriteLine();
+            }
+            Console.WriteLine("----------------------");
+        }
+
         public int[,] ToAttainabilityMatrix()
         {
-            throw new NotImplementedException();
+            var adj = this.ToAdjacencyMatrix();
+
+            var adj2 = MultiplicationMatrixD(adj, adj);
+            var adj3 = MultiplicationMatrixD(adj2, adj);
+            var adj4 = MultiplicationMatrixD(adj3, adj);
+
+            //OutputMatrix(adj);
+            //OutputMatrix(adj2);
+            //OutputMatrix(adj3);
+            //OutputMatrix(adj4);
+
+            for (int i = 0; i < adj.GetLength(0); i++)
+            {
+                for (int j = 0; j < adj.GetLength(1); j++)
+                {
+                    adj[i, j] += adj2[i, j] + adj3[i, j] + adj4[i, j];
+                }
+            }
+
+            return adj;
         }
 
         public int[,] ToIncidenceMatrix()
