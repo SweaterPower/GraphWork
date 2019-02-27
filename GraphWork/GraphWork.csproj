@@ -138,5 +138,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EditGraph\EditGraph.csproj">
+      <Project>{b19b7c05-f4cc-4e66-95e9-3dc109a5f909}</Project>
+      <Name>EditGraph</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

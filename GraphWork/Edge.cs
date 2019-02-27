@@ -18,7 +18,7 @@ namespace GraphWork
          наличие стрелки [сделано]
          отображение свойств
          толщина границы (увеличивать при выделении)
-         выделение (изи изи риал автор властелина колец)
+         выделение
              */
 
         #region Dependency Properties
@@ -144,7 +144,7 @@ namespace GraphWork
 
         private void InternalDrawArrowGeometry(StreamGeometryContext context)
         {
-            double k = (-1 * (Y1 - Y2)) / (X2 - X1);
+            /*double k = (-1 * (Y1 - Y2)) / (X2 - X1);
             double a = Math.Atan(k);
             if (X1 > X2)
             {
@@ -155,8 +155,8 @@ namespace GraphWork
             Point pt1 = new Point(X1, this.Y1);
             Point pt2 = new Point(X2, this.Y2);
 
-            //double height = Math.Sqrt((pt2.X - pt1.X) * (pt2.X - pt1.X) + (pt2.Y - pt1.Y) * (pt2.Y - pt1.Y));
-            //double width = Math.Abs(Curveture) * 2.5 + height / 10;
+            double height = Math.Sqrt((pt2.X - pt1.X) * (pt2.X - pt1.X) + (pt2.Y - pt1.Y) * (pt2.Y - pt1.Y));
+            double width = Math.Abs(Curveture) * 2.5 + height / 10;
 
             double Ax = (X1 + X2) / 2;
             double Ay = (Y1 + Y2) / 2;
@@ -176,6 +176,9 @@ namespace GraphWork
             Point ptGap = new Point(X2 - (Gap + 3) * Math.Cos(a), Y2 - (Gap + 3) * Math.Sin(a));
             ptGap = new Point(ptGap.X + modifier * Math.Cos(b), ptGap.Y + modifier * Math.Sin(b));
 
+            Point ptEnd = new Point(X2 - (Gap + 23) * Math.Cos(a), Y2 - (Gap + 23) * Math.Sin(a));
+            ptEnd = new Point(ptGap.X + modifier * Math.Cos(b), ptGap.Y + modifier * Math.Sin(b));
+
             double theta = Math.Atan2(By - ptGap.Y, Bx - ptGap.X);
             double sint = Math.Sin(theta);
             double cost = Math.Cos(theta);
@@ -190,19 +193,115 @@ namespace GraphWork
 
             context.BeginFigure(new Point(Bx, By), true, false);
             //context.LineTo(new Point(Bx, By), true, true);
-            context.LineTo(ptGap, true, true);
+            ////context.LineTo(ptGap, true, true);
             //context.LineTo(new Point(Bx, By), true, true);
             //context.LineTo(new Point(Ax, Ay), true, true);
             //context.LineTo(pt1, true, true);
-            //context.ArcTo(pt2, new Size(height, width), a / Math.PI * 180, false, Curveture > 0 ? SweepDirection.Clockwise : SweepDirection.Counterclockwise, true, true);
+            context.ArcTo(ptEnd, new Size(height, width), a / Math.PI * 180, false, Curveture > 0 ? SweepDirection.Clockwise : SweepDirection.Counterclockwise, true, true);
+            context.LineTo(ptGap, true, true);
             if (HasArrow)
             {
-                //context.LineTo(ptGap, true, true);
+                context.LineTo(pt3, true, true);
+                context.LineTo(ptGap, true, true);
+                context.LineTo(pt4, true, true);
+                context.LineTo(ptGap, true, true);
+            }*/
+            /*Point pt1 = new Point(X1, this.Y1);
+            Point pt2 = new Point(X2, this.Y2);
+
+            double k = (-1 * (Y1 - Y2)) / (X2 - X1);
+            double a = Math.Atan(k);
+            if (X1 > X2)
+            {
+                a = Math.PI - a;
+                a *= -1;
+            }
+
+            double Ax = (X1 + X2) / 2;
+            double Ay = (Y1 + Y2) / 2;
+            double b = Math.Atan(-1 / (-1 * (Y1 - Y2) / (X2 - X1)));
+            if (Y1 >= Ay)
+            {
+                b = Math.PI - b;
+                b *= -1;
+            }
+
+            double modifier = Curveture * 0.2;
+            double Bx = X1 + modifier * Math.Cos(b);
+            double By = Y1 + modifier * Math.Sin(b);
+
+            double gapx = X2 - (Gap + 3) * Math.Cos(a);
+            double gapy = Y2 - (Gap + 3) * Math.Sin(a);
+            Point ptGap = new Point(gapx + modifier * Math.Cos(b), gapy + modifier * Math.Sin(b));
+
+            k = (-1 * (Y2 - ptGap.Y)) / (X2 - ptGap.X);
+            double theta = Math.Atan(k);
+            double sint = Math.Sin(theta);
+            double cost = Math.Cos(theta);
+
+            double height = Math.Sqrt((pt2.X - pt1.X) * (pt2.X - pt1.X) + (pt2.Y - pt1.Y) * (pt2.Y - pt1.Y));
+            double width = Math.Abs(Curveture) * 2.5 + height / 10;
+
+            Point pt3 = new Point(
+                ptGap.X + (HeadWidth * cost - HeadHeight * sint),
+                ptGap.Y + (HeadWidth * sint + HeadHeight * cost));
+
+            Point pt4 = new Point(
+                ptGap.X + (HeadWidth * cost + HeadHeight * sint),
+                ptGap.Y - (HeadHeight * cost - HeadWidth * sint));
+
+            TopX = Ax + modifier * Math.Cos(b);
+            TopY = Ay + modifier * Math.Sin(b);
+            context.BeginFigure(pt1, true, false);
+            context.ArcTo(ptGap, new Size(height, width), a / Math.PI * 180, false, Curveture > 0 ? SweepDirection.Clockwise : SweepDirection.Counterclockwise, true, true);
+            //context.LineTo(ptGap, true, true);
+            if (HasArrow)
+            {
                 context.LineTo(pt3, true, true);
                 context.LineTo(ptGap, true, true);
                 context.LineTo(pt4, true, true);
                 context.LineTo(ptGap, true, true);
             }
+            context.LineTo(pt2, true, true);*/
+            Point pt1 = new Point(X1, this.Y1);
+            Point pt2 = new Point(X2, this.Y2);
+
+            TopX = (X1 + X2) / 2;
+            TopY = (Y1 + Y2) / 2;
+
+            double k = (Y2 - Y1) / (X2 - X1);
+            double theta = Math.Atan(k);
+
+            if (X1 > X2)
+            {
+                theta = Math.PI - theta;
+                theta *= -1;
+            }
+
+            double sint = Math.Sin(theta);
+            double cost = Math.Cos(theta);
+
+            double gapx = X2 - (Gap + 3) * Math.Cos(theta);
+            double gapy = Y2 - (Gap + 3) * Math.Sin(theta);
+            Point ptGap = new Point(gapx, gapy);
+
+            Point pt3 = new Point(
+                ptGap.X - (HeadWidth * cost - HeadHeight * sint),
+                ptGap.Y - (HeadWidth * sint + HeadHeight * cost));
+
+            Point pt4 = new Point(
+                ptGap.X - (HeadWidth * cost + HeadHeight * sint),
+                ptGap.Y + (HeadHeight * cost - HeadWidth * sint));
+            context.BeginFigure(pt1, true, false);
+            context.LineTo(ptGap, true, true);
+            if (HasArrow)
+            {
+                context.LineTo(pt3, true, true);
+                context.LineTo(ptGap, true, true);
+                context.LineTo(pt4, true, true);
+                context.LineTo(ptGap, true, true);
+            }
+            context.LineTo(pt2, true, true);
         }
 
         #endregion
