@@ -29,7 +29,7 @@ namespace GraphWork
             CBSecond.ItemsSource = graphContainer.vertexes;
             graphContainer.AddVertex();
             graphContainer.AddVertex();
-            graphContainer.AddEdge(1, 2, hasArrow.IsChecked.Value);
+            graphContainer.AddEdge(1, 2, true);
             CBFirst.SelectedIndex = 0;
             CBSecond.SelectedIndex = 1;
         }

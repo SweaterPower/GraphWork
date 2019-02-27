@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using EditGraph;
 
 namespace GraphWork
 {
@@ -68,30 +69,33 @@ namespace GraphWork
             }
         }
 
-        //public void DeleteEdge()
-        //{
-        //    var e = (edges.Keys.FirstOrDefault((a) => { return a.Item1 == from && a.Item2 == to; }));
-        //    if (e == null)
-        //    {
-        //        MessageBox.Show("No such edge...");
-        //    }
-        //    else
-        //    {
-        //        var k = edges[e];
-        //        if (k.Item2)
-        //        {
-        //            k.Item1.AddFromTo(direct);
-        //        }
-        //        else
-        //        {
-        //            k.Item1.AddToFrom(direct);
-        //        }
-        //    }
-        //}
+        public void DeleteEdge(int from, int to)
+        {
+            var e = (edges.Keys.FirstOrDefault((a) => { return a.Item1 == from && a.Item2 == to; }));
+            if (e == null)
+            {
+                MessageBox.Show("No such edge...");
+            }
+            else
+            {
+                edges.Remove(e);
+            }
+        }
 
+        public void DeleteVertex(int id)
+        {
+            vertexes.Remove(id);
+        }
+
+        GraphWirth root;
         public ObservableCollection<int> vertexes = new ObservableCollection<int>();
         public SortedDictionary<Tuple<int, int>, Tuple<EdgeContainer, bool>> edges = new SortedDictionary<Tuple<int, int>, Tuple<EdgeContainer, bool>>();
         int start = 0;
+
+        void VisualiseGraph()
+        {
+
+        }
 
         void UpdateSeparation()
         {
