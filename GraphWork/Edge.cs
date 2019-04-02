@@ -266,23 +266,38 @@ namespace GraphWork
             Point pt1 = new Point(X1, this.Y1);
             Point pt2 = new Point(X2, this.Y2);
 
-            TopX = (X1 + X2) / 2;
-            TopY = (Y1 + Y2) / 2;
-
             double k = (Y2 - Y1) / (X2 - X1);
             double theta = Math.Atan(k);
+
+            k = -1 / (-1 * (Y1 - Y2)) / (X2 - X1);
+            double a = Math.Atan(k);
 
             if (X1 > X2)
             {
                 theta = Math.PI - theta;
                 theta *= -1;
+                a = Math.PI - a;
+                a *= -1;
             }
 
             double sint = Math.Sin(theta);
             double cost = Math.Cos(theta);
 
-            double gapx = X2 - (Gap + 3) * Math.Cos(theta);
-            double gapy = Y2 - (Gap + 3) * Math.Sin(theta);
+            double voshod = Math.Sqrt((X2 - X1) * (X2 - X1) + (Y2 - Y1) * (Y2 - Y1)) / 2;//Gap*3;
+            double voshodx = X1 + voshod * cost;
+            double voshody = Y1 + voshod * sint;
+            //double voshodx = Math.Abs(X1 - X2) / 2;
+            //double voshody = Math.Abs(Y1 - Y2) / 2;
+
+            double modifier = Curveture * 0.5;
+            double Bx = voshodx + modifier * Math.Cos(a);
+            double By = voshody + modifier * Math.Sin(a);
+
+            TopX = Bx;
+            TopY = By;
+
+            double gapx = X2 - (Gap + 3) * cost;
+            double gapy = Y2 - (Gap + 3) * sint;
             Point ptGap = new Point(gapx, gapy);
 
             Point pt3 = new Point(
@@ -293,6 +308,7 @@ namespace GraphWork
                 ptGap.X - (HeadWidth * cost + HeadHeight * sint),
                 ptGap.Y + (HeadHeight * cost - HeadWidth * sint));
             context.BeginFigure(pt1, true, false);
+            context.LineTo(new Point(Bx, By), true, false);
             context.LineTo(ptGap, true, true);
             if (HasArrow)
             {

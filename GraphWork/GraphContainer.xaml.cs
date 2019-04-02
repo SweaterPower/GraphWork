@@ -128,13 +128,26 @@ namespace GraphWork
                 AddVertexVisual(root.Key, root.Value);
                 root = root.Next;
             }
+            List<int> undirectEdgesF = new List<int>();
+            List<int> undirectEdgesT = new List<int>();
             root = graph.root;
             while (root != null)
             {
                 var trail = root.Trail;
                 while (trail != null)
                 {
-                    AddEdgeVisual(root.Key, trail.Id.Key, trail.Direct);
+                    if (trail.Direct)
+                        AddEdgeVisual(root.Key, trail.Id.Key, trail.Direct);
+                    else
+                    {
+                        if (!undirectEdgesF.Contains(trail.Id.Key))
+                            if (!undirectEdgesT.Contains(root.Key))
+                            {
+                                AddEdgeVisual(root.Key, trail.Id.Key, trail.Direct);
+                                undirectEdgesF.Add(root.Key);
+                                undirectEdgesT.Add(trail.Id.Key);
+                            }
+                    }
                     trail = trail.Next;
                 }
                 root = root.Next;
