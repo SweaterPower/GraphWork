@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GraphWork"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="500" Width="700">
     <Window.Resources>
         <local:LengthConverter x:Key="LengthConverter" />
     </Window.Resources>
@@ -14,10 +14,11 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="3*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Grid Grid.Column="1" Grid.RowSpan="2">
+        <Grid Grid.Column="0" Grid.RowSpan="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
@@ -28,18 +29,18 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <Button Content="Vertex" Click="AddVertex"/>
+            <Button Content="Add vertex" Click="AddVertex"/>
             <StackPanel Grid.Row="1">
-                <DockPanel LastChildFill="True">
+                <!--<DockPanel LastChildFill="True">
                     <TextBlock Text="Key: "/>
                     <TextBox x:Name="TBKey"/>
-                </DockPanel>
+                </DockPanel>-->
                 <DockPanel LastChildFill="True">
                     <TextBlock Text="Value: "/>
                     <TextBox x:Name="TBValue"/>
                 </DockPanel>
             </StackPanel>
-            <Button Content="Edge" Click="AddEdge" Grid.Row="2"/>
+            <Button Content="Add edge" Click="AddEdge" Grid.Row="2"/>
             <StackPanel Grid.Row="3">
                 <ComboBox x:Name="CBFirst"/>
                 <ComboBox x:Name="CBSecond"/>
@@ -51,9 +52,41 @@
                     <TextBox x:Name="weightTB"/>
                 </DockPanel>
             </StackPanel>
-            <Button Content="Delet" Click="AddEdge" Grid.Row="5"/>
+            <StackPanel Grid.Row="5">
+                <Button Content="Delete vertex" Click="DeleteVertex"/>
+                <ComboBox x:Name="deleteVertexCB"/>
+            </StackPanel>
+            <Button Content="Delete edge" Click="DeleteEdge" Grid.Row="6"/>
+            <StackPanel Grid.Row="7">
+                <ComboBox x:Name="deleteEdgeCBFirst"/>
+                <ComboBox x:Name="deleteEdgeCBSecond"/>
+            </StackPanel>
         </Grid>
-        <local:GraphContainer x:Name="graphContainer" Grid.RowSpan="2">
+        <local:GraphContainer x:Name="graphContainer" Grid.RowSpan="2" Grid.Column="1">
         </local:GraphContainer>
+        <StackPanel Grid.Column="2">
+            <Button Padding="10" Click="RootsOfSpannigTrees">Поиск корней</Button>
+            <ListBox x:Name="spanRootsLB"/>
+            <Button Padding="10" Click="BranchesOfLenght">Поиск путей</Button>
+            <DockPanel LastChildFill="True">
+                <TextBlock Text="ID: "/>
+                <TextBox x:Name="searchIDTB"/>
+            </DockPanel>
+            <DockPanel LastChildFill="True">
+                <TextBlock Text="Длина: "/>
+                <TextBox x:Name="lengthTB"/>
+            </DockPanel>
+            <ListBox x:Name="pathsLB"/>
+            <Button Padding="10" Click="NPereferial">N-переферия</Button>
+            <DockPanel LastChildFill="True">
+                <TextBlock Text="ID: "/>
+                <TextBox x:Name="nperIDTB"/>
+            </DockPanel>
+            <DockPanel LastChildFill="True">
+                <TextBlock Text="Длина: "/>
+                <TextBox x:Name="nperLengthTB"/>
+            </DockPanel>
+            <ListBox x:Name="nperLB"/>
+        </StackPanel>
     </Grid>
 </Window>

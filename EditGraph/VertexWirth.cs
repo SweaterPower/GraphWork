@@ -38,18 +38,20 @@ namespace EditGraph
             return Next.GetEnd();
         }
 
-        public VertexWirth(int key, int count, VertexWirth next, EdgeWirth trail)
+        public VertexWirth(int key, int count, VertexWirth next, EdgeWirth trail, object data = null)
         {
             Key = key;
             this.count = count;
             Next = next;
             Trail = trail;
+            Data = data;
         }
 
-        public VertexWirth(int key, int value)
+        public VertexWirth(int key, int value, object data = null)
         {
             Key = key;
             Value = value;
+            Data = data;
         }
     }
 }

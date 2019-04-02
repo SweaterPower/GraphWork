@@ -10,7 +10,7 @@ namespace EditGraph
     {
         public VertexWirth root;
 
-        VertexWirth Find(int key)
+        public VertexWirth Find(int key)
         {
             var vertex = root;
             while (vertex != null)
@@ -49,6 +49,14 @@ namespace EditGraph
         }
         int GetKey() => ++key;
 
+        public bool AddEdge(int from, int to, int weight, bool direct)
+        {
+            if (direct)
+                return AddDirectEdge(from, to, weight);
+            else
+                return AddUndirectEdge(from, to, weight);
+        }
+
         public bool AddDirectEdge(int from, int to, int weight)
         {
             var f = Find(from);
@@ -83,24 +91,24 @@ namespace EditGraph
             return true;
         }
 
-        public bool AddVertex(int val)
+        public bool AddVertex(int val, object data = null)
         {
             if (root != null)
-                root.GetEnd().Next = new VertexWirth(GetKey(), val);
+                root.GetEnd().Next = new VertexWirth(GetKey(), val, data);
             else
-                root = new VertexWirth(GetKey(), val);
+                root = new VertexWirth(GetKey(), val, data);
             return true;
         }
 
-        public bool AddVertex(int key, int val)
+        public bool AddVertex(int key, int val, object data = null)
         {
             var f = Find(key);
             if (f != null) return false;
             RenewKey(key);
             if (root != null)
-                root.GetEnd().Next = new VertexWirth(key, val);
+                root.GetEnd().Next = new VertexWirth(key, val, data);
             else
-                root = new VertexWirth(key, val);
+                root = new VertexWirth(key, val, data);
             return true;
         }
 
@@ -112,6 +120,11 @@ namespace EditGraph
             var t = Find(to);
             if (t == null) return false;
 
+            return DeleteDirectEdge(f, t);
+        }
+
+        private bool DeleteDirectEdge(VertexWirth f, VertexWirth t)
+        {
             EdgeWirth previous = null;
             var edge = f.Trail;
             while (edge != null)
@@ -158,6 +171,11 @@ namespace EditGraph
             var t = Find(to);
             if (f == null) return false;
 
+            return DeleteUndirectEdge(f, t) && DeleteUndirectEdge(t, f);
+        }
+
+        private bool DeleteUndirectEdge(VertexWirth f, VertexWirth t)
+        {
             EdgeWirth previous = null;
             var edge = f.Trail;
             while (edge != null)
@@ -231,6 +249,28 @@ namespace EditGraph
             return false;
         }
 
+        public bool DeleteEdge(int from, int to)
+        {
+            var f = Find(from);
+            if (f == null) return false;
+
+            var t = Find(to);
+            if (t == null) return false;
+
+            var edge = f.Trail;
+            while (edge != null)
+            {
+                if (edge.Id.Key == t.Key)
+                    break;
+                edge = edge.Next;
+            }
+
+            if (edge.Direct)
+                return DeleteDirectEdge(f, t);
+            else
+                return DeleteUndirectEdge(f, t) && DeleteUndirectEdge(t, f);
+        }
+
         public bool DeleteVertex(int key)
         {
             if (root == null) return false;
@@ -291,6 +331,25 @@ namespace EditGraph
                 edge = edge.Next;
             }
             return false;//как
+        }
+
+        private void DFS(VertexWirth vertex, ref List<int> visited)
+        {
+            visited.Add(vertex.Key);
+            var trail = vertex.Trail;
+            while (trail != null)
+            {
+                if (!visited.Contains(trail.Id.Key))
+                    DFS(trail.Id, ref visited);
+                trail = trail.Next;
+            }
+        }
+
+        public void DFS(int vertexID, ref List<int> visited)
+        {
+            var vertex = Find(vertexID);
+            if (vertex != null)
+                DFS(vertex, ref visited);
         }
 
         public Tuple<int, int>[] ToAdjacencyList()

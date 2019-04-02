@@ -25,16 +25,16 @@ namespace GraphWork
         bool inverted = false;
         bool minus = false;
 
-        public EdgeContainer(Vertex f, Vertex t, Canvas pc, bool direct)
+        public EdgeContainer(Vertex f, Vertex t, Canvas pc, bool direct, int weight = 0)
         {
             InitializeComponent();
             parentCanvas = pc;
             from = f;
             to = t;
-            AddEdge(f, t, direct);
+            AddEdge(f, t, direct, weight);
         }
 
-        void AddEdge(Vertex from, Vertex to, bool direct)
+        void AddEdge(Vertex from, Vertex to, bool direct, int weight = 0)
         {
             EdgeShape l = new EdgeShape();
 
@@ -131,19 +131,19 @@ namespace GraphWork
             t.SetBinding(EdgeInfo.eiYProperty, tbY);
             t.PropertyChanged += Changed;
             mainCanvas.Children.Add(t);
-            t.Txt = l.Curveture.ToString();
+            t.Txt = weight.ToString();
         }
 
-        public void AddFromTo(bool direct)
+        public void AddFromTo(bool direct, int weight = 0)
         {
             inverted = false;
-            AddEdge(from, to, direct);
+            AddEdge(from, to, direct, weight);
         }
 
-        public void AddToFrom(bool direct)
+        public void AddToFrom(bool direct, int weight = 0)
         {
             inverted = true;
-            AddEdge(to, from, direct);
+            AddEdge(to, from, direct, weight);
         }
 
         public void Changed(object sender, PropertyChangedEventArgs e)

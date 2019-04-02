@@ -27,20 +27,24 @@ namespace GraphWork
             mainCanvas.SizeChanged += mainCanvas_SizeChanged;
         }
 
-        void AddVertexVisual(int key, int value)
+        void AddVertexVisual(int key, int value, object data = null)
         {
             Vertex v = new Vertex();
             v.PropertyChanged += Changed;
             mainCanvas.Children.Add(v);
             //UpdateIndexes();
-            v.Info = "Vertex " + (key).ToString();
+            var s = data as string;
+            if (s == null)
+                v.Info = "Vertex " + (key).ToString();
+            else
+                v.Info = s + " (" + value + ")";
             v.Diameter = 60;
             v.Measure(mainCanvas.RenderSize);
             v.Arrange(new Rect(0, 0, mainCanvas.DesiredSize.Width, mainCanvas.DesiredSize.Height));
             vertexes.Add(new Tuple<int, Vertex>(key, v));
         }
 
-        void AddEdgeVisual(int from, int to, bool direct)
+        void AddEdgeVisual(int from, int to, bool direct, int weight = 0)
         {
             var e = (edges.Keys.FirstOrDefault((a) => { return a.Item1 == from && a.Item2 == to; }));
             if (e == null)
@@ -49,7 +53,7 @@ namespace GraphWork
                 var toVertex = vertexes.FirstOrDefault((v) => { return v.Item1 == to; });
                 if (fromVertex != null && toVertex != null)
                 {
-                    EdgeContainer l = new EdgeContainer(fromVertex.Item2, toVertex.Item2, mainCanvas, direct);
+                    EdgeContainer l = new EdgeContainer(fromVertex.Item2, toVertex.Item2, mainCanvas, direct, weight);
                     mainCanvas.Children.Add(l);
                     edges.Add(new Tuple<int, int>(from, to), new Tuple<EdgeContainer, bool>(l, true));
                     edges.Add(new Tuple<int, int>(to, from), new Tuple<EdgeContainer, bool>(l, false));
@@ -61,59 +65,48 @@ namespace GraphWork
                 var k = edges[e];
                 if (k.Item2)
                 {
-                    k.Item1.AddFromTo(direct);
+                    k.Item1.AddFromTo(direct, weight);
                 }
                 else
                 {
-                    k.Item1.AddToFrom(direct);
+                    k.Item1.AddToFrom(direct, weight);
                 }
             }
         }
 
-        void DeleteEdge(int from, int to)
+        public void DeleteEdge(int from, int to)
         {
-            var e = (edges.Keys.FirstOrDefault((a) => { return a.Item1 == from && a.Item2 == to; }));
-            if (e == null)
-            {
-                MessageBox.Show("No such edge...");
-            }
-            else
-            {
-                edges.Remove(e);
-            }
+            graph.DeleteEdge(from, to);
+            VisualiseGraph();
         }
 
-        void DeleteVertex(int id)
+        public void DeleteVertex(int id)
         {
-            var toremove = vertexes.FirstOrDefault((v) => { return v.Item1 == id; });
-            if (toremove != null)
-                vertexes.Remove(toremove);
+            graph.DeleteVertex(id);
+            VisualiseGraph();
         }
 
         GraphWirth graph;
         public ObservableCollection<Tuple<int, Vertex>> vertexes = new ObservableCollection<Tuple<int, Vertex>>();
         public Dictionary<Tuple<int, int>, Tuple<EdgeContainer, bool>> edges = new Dictionary<Tuple<int, int>, Tuple<EdgeContainer, bool>>();
-        List<int> BFSlist = new List<int>();
+        //List<int> BFSlist = new List<int>();
         List<List<int>> levels = new List<List<int>>();
 
-        public void AddVertex()
+        public void AddVertex(string info = "")
         {
-            graph.AddVertex(vertexes.Count + 1);
+            graph.AddVertex(vertexes.Count + 1, info);
             VisualiseGraph();
         }
 
-        public void AddVertex(int value)
+        public void AddVertex(int value, string info = "")
         {
-            graph.AddVertex(value);
+            graph.AddVertex(value, info);
             VisualiseGraph();
         }
 
-        public void AddEdge(int from, int to, bool direct)
+        public void AddEdge(int from, int to, bool direct, int weight = 0)
         {
-            if (direct)
-                graph.AddDirectEdge(from, to, 0);
-            else
-                graph.AddUndirectEdge(from, to, 0);
+            graph.AddEdge(from, to, weight, direct);
             VisualiseGraph();
         }
 
@@ -137,13 +130,13 @@ namespace GraphWork
                 while (trail != null)
                 {
                     if (trail.Direct)
-                        AddEdgeVisual(root.Key, trail.Id.Key, trail.Direct);
+                        AddEdgeVisual(root.Key, trail.Id.Key, trail.Direct, trail.Weight);
                     else
                     {
                         if (!undirectEdgesF.Contains(trail.Id.Key))
                             if (!undirectEdgesT.Contains(root.Key))
                             {
-                                AddEdgeVisual(root.Key, trail.Id.Key, trail.Direct);
+                                AddEdgeVisual(root.Key, trail.Id.Key, trail.Direct, trail.Weight);
                                 undirectEdgesF.Add(root.Key);
                                 undirectEdgesT.Add(trail.Id.Key);
                             }
@@ -330,35 +323,147 @@ namespace GraphWork
         //    }
         //}
 
-        void UpdateBFSlist()
+        //void UpdateBFSlist()
+        //{
+        //    BFSlist.Clear();
+        //    List<int> visited = new List<int>();
+        //    Queue<VertexWirth> tovisit = new Queue<VertexWirth>();
+
+        //    VertexWirth vertex = graph.root;
+        //    tovisit.Enqueue(vertex);
+        //    while (tovisit.Count != 0)
+        //    {
+        //        vertex = tovisit.Dequeue();
+        //        BFSlist.Add(vertex.Key);
+        //        visited.Add(vertex.Key);
+        //        EdgeWirth trail = vertex.Trail;
+        //        while (trail != null)
+        //        {
+        //            if (!visited.Contains(trail.Id.Key))
+        //                tovisit.Enqueue(trail.Id);
+
+        //            trail = trail.Next;
+        //        }
+        //    }
+        //    vertex = graph.root;
+        //    while (vertex != null)
+        //    {
+        //        if (!visited.Contains(vertex.Key))
+        //            BFSlist.Add(vertex.Key);
+        //        vertex = vertex.Next;
+        //    }
+        //}
+
+        public List<string> GetRootsOfSpannigTrees()
         {
-            BFSlist.Clear();
+            List<string> ret = new List<string>();
+            List<int> res = new List<int>();
+            List<int> visited = new List<int>();
+
+            var ids = vertexes.Select((a) => { return a.Item1; }).ToList();
+            foreach (var id in ids)
+            {
+                graph.DFS(id, ref visited);
+                if (visited.Count == ids.Count)
+                    res.Add(id);
+                visited.Clear();
+            }
+            foreach (var id in res)
+            {
+                var item = vertexes.FirstOrDefault((a) => { return a.Item1 == id; });
+                if (item != null)
+                    ret.Add(item.Item2.Info + " (" + item.Item1 + ")");
+            }
+
+            return ret;
+        }
+
+        public List<string> GetPathsOfLength(int root, int length)
+        {
+            List<string> ret = new List<string>();
+            List<int> res = new List<int>();
             List<int> visited = new List<int>();
             Queue<VertexWirth> tovisit = new Queue<VertexWirth>();
+            Queue<int> paths = new Queue<int>();
 
-            VertexWirth vertex = graph.root;
-            tovisit.Enqueue(vertex);
-            while (tovisit.Count != 0)
+            VertexWirth vertex = graph.Find(root);
+            if (vertex != null)
             {
-                vertex = tovisit.Dequeue();
-                BFSlist.Add(vertex.Key);
-                visited.Add(vertex.Key);
-                EdgeWirth trail = vertex.Trail;
-                while (trail != null)
+                tovisit.Enqueue(vertex);
+                paths.Enqueue(0);
+                while (tovisit.Count != 0)
                 {
-                    if (!visited.Contains(trail.Id.Key))
-                        tovisit.Enqueue(trail.Id);
+                    vertex = tovisit.Dequeue();
+                    visited.Add(vertex.Key);
+                    int path = paths.Dequeue();
+                    if (path == length)
+                        res.Add(vertex.Key);
+                    EdgeWirth trail = vertex.Trail;
+                    while (trail != null)
+                    {
+                        if (!visited.Contains(trail.Id.Key))
+                        {
+                            tovisit.Enqueue(trail.Id);
+                            paths.Enqueue(path + trail.Weight);
+                        }
 
-                    trail = trail.Next;
+                        trail = trail.Next;
+                    }
+                }
+
+                foreach (var id in res)
+                {
+                    var item = vertexes.FirstOrDefault((a) => { return a.Item1 == id; });
+                    if (item != null)
+                        ret.Add(item.Item2.Info + " (" + item.Item1 + ")");
                 }
             }
-            vertex = graph.root;
-            while (vertex != null)
+
+            return ret;
+        }
+
+        public List<string> GetNPereferial(int root, int length)
+        {
+            List<string> ret = new List<string>();
+            List<int> res = new List<int>();
+            List<int> visited = new List<int>();
+            Queue<VertexWirth> tovisit = new Queue<VertexWirth>();
+            Queue<int> paths = new Queue<int>();
+
+            VertexWirth vertex = graph.Find(root);
+            if (vertex != null)
             {
-                if (!visited.Contains(vertex.Key))
-                    BFSlist.Add(vertex.Key);
-                vertex = vertex.Next;
+                tovisit.Enqueue(vertex);
+                paths.Enqueue(0);
+                while (tovisit.Count != 0)
+                {
+                    vertex = tovisit.Dequeue();
+                    visited.Add(vertex.Key);
+                    int path = paths.Dequeue();
+                    if (path > length)
+                        res.Add(vertex.Key);
+                    EdgeWirth trail = vertex.Trail;
+                    while (trail != null)
+                    {
+                        if (!visited.Contains(trail.Id.Key))
+                        {
+                            tovisit.Enqueue(trail.Id);
+                            paths.Enqueue(path + trail.Weight);
+                        }
+
+                        trail = trail.Next;
+                    }
+                }
+
+                foreach (var id in res)
+                {
+                    var item = vertexes.FirstOrDefault((a) => { return a.Item1 == id; });
+                    if (item != null)
+                        ret.Add(item.Item2.Info + " (" + item.Item1 + ")");
+                }
             }
+
+            return ret;
         }
 
         public void Changed(object sender, PropertyChangedEventArgs e)
