@@ -294,11 +294,11 @@ namespace EditGraph
                             {
                                 if (tmp.Direct)//го его удалим
                                 {
-                                    DeleteDirectEdge(tmp.Id.Key, f.Key);
+                                    DeleteDirectEdge(r.Key, f.Key);
                                 }
                                 else
                                 {
-                                    DeleteUndirectEdge(tmp.Id.Key, f.Key);
+                                    DeleteUndirectEdge(r.Key, f.Key);
                                 }
                             }
                             tmp = tmp.Next;
@@ -352,6 +352,241 @@ namespace EditGraph
                 DFS(vertex, ref visited);
         }
 
+        public int[,] Floid()
+        {
+            Dictionary<int, int> ids = new Dictionary<int, int>();
+            var vertex = root;
+            int index = 0;
+            while (vertex != null)
+            {
+                ids.Add(vertex.Key, index);
+                index++;
+                vertex = vertex.Next;
+            }
+            int[,] a = new int[ids.Count, ids.Count];
+            for (int i = 0; i < ids.Count; i++)
+                for (int j = 0; j < ids.Count; j++)
+                    a[i, j] = 99999;
+            vertex = root;
+            while (vertex != null)
+            {
+                var t = vertex.Trail;
+                while (t != null)
+                {
+                    a[ids[vertex.Key], ids[t.Id.Key]] = t.Weight;
+                    t = t.Next;
+                }
+                vertex = vertex.Next;
+            }
+            for (int i = 0; i < ids.Count; i++)
+                for (int u = 0; u < ids.Count; u++)
+                    for (int v = 0; v < ids.Count; v++)
+                        a[u, v] = Math.Min(a[u, v], a[u, i] + a[i, v]);
+            return a;
+        }
+
+        public List<int> PathsBetween(int from, int to)
+        {
+            List<int> ret = new List<int>();
+
+            var f = Find(from);
+            if (f == null) return ret;
+
+            var t = Find(to);
+            if (t == null) return ret;
+
+            List<int> ids = new List<int>();
+            var v = root;
+            while (v != null)
+            {
+                ids.Add(v.Key);
+                v = v.Next;
+            }
+            from = ids.IndexOf(from);
+            to = ids.IndexOf(to);
+
+            var M = this.ToAdjacencyMatrix2();
+            int kMAX = 0;
+            for (int i = 0; i < M.GetLength(0); i++)
+                for (int j = 0; j < M.GetLength(1); j++)
+                    if (M[i, j] > 0)
+                    {
+                        //M[i, j] = 1;
+                        kMAX++;
+                    }
+            int[,] a = new int[M.GetLength(0), M.GetLength(1)];
+            int[,] b = new int[M.GetLength(0), M.GetLength(1)];
+            bool[] visited = new bool[M.GetLength(0)];
+            Queue<int> Q = new Queue<int>();
+            for (int i = 0; i < M.GetLength(0); i++)
+                visited[i] = false;
+            //DFS(M, from, ref visited, ref a);
+
+            Q.Enqueue(from);
+            visited[from] = true;
+
+            while (Q.Count != 0)
+            {
+                int top = Q.Dequeue();
+                if (top != to)
+                    for (int i = 0; i < M.GetLength(0); ++i)
+                    {
+                        if (M[top, i] != 0 && (!visited[i]))
+                        {
+                            Q.Enqueue(i);
+                            if (i != to)
+                                visited[i] = true;
+                            a[top, i] = 1;
+                        }
+                    }
+            }
+
+            Array.Copy(a, b, M.Length);
+            ret.Add(b[from, to]);
+            for (int i = 1; i <= kMAX; i++)
+            {
+                b = MultiplicationMatrixD(b, a);
+                ret.Add(b[from, to]);
+                //ret.Add(countPaths(M, M.GetLength(0), i));
+            }
+
+            return ret;
+        }
+
+        public int ShortestPathBetween(int from, int to)
+        {
+            var f = Find(from);
+            if (f == null) return -1;
+
+            var t = Find(to);
+            if (t == null) return -1;
+
+            List<int> ids = new List<int>();
+            var v = root;
+            while (v != null)
+            {
+                ids.Add(v.Key);
+                v = v.Next;
+            }
+            from = ids.IndexOf(from);
+            to = ids.IndexOf(to);
+
+            return Floid()[from, to];
+        }
+
+        public int ProcMaxFlow(int s, int t, ref List<List<int>> chains)
+        {
+            var S = Find(s);
+            if (S == null) return -1;
+
+            var T = Find(t);
+            if (T == null) return -1;
+
+            List<int> ids = new List<int>();
+            var v = root;
+            while (v != null)
+            {
+                ids.Add(v.Key);
+                v = v.Next;
+            }
+            s = ids.IndexOf(s);
+            t = ids.IndexOf(t);
+
+            var capacity = ToWeightMatrix();
+            return maxFlow(capacity, s, t, ref chains);
+        }
+
+        int maxFlow(int[,] cap, int s, int t, ref List<List<int>> chains)
+        {
+            for (int flow = 0; ;)
+            {
+                List<int> chain = new List<int>();
+                int df = findPath(cap, new bool[cap.GetLength(0)], s, t, int.MaxValue, ref chain);
+                chains.Add(chain);
+                if (df == 0)
+                    return flow;
+                flow += df;
+            }
+        }
+
+        int findPath(int[,] cap, bool[] vis, int u, int t, int f, ref List<int> chain)
+        {
+            if (u == t)
+                return f;
+            vis[u] = true;
+            for (int v = 0; v < vis.Length; v++)
+                if (!vis[v] && cap[u,v] > 0)
+                {
+                    int df = findPath(cap, vis, v, t, Math.Min(f, cap[u,v]), ref chain);
+                    if (df > 0)
+                    {
+                        chain.Add(v);
+                        cap[u,v] -= df;
+                        cap[v,u] += df;
+                        return df;
+                    }
+                }
+            return 0;
+        }
+
+        //void DFS(int[,] a, int i, ref bool[] visited, ref int[,] b)
+        //{
+        //    int j;
+        //    visited[i] = true;
+        //    for (j = 0; j < a.GetLength(0); j++)
+        //        if (!visited[j] && a[i, j] == 1)
+        //        {
+        //            b[i, j] = 1;
+        //            DFS(a, j, ref visited, ref b);
+        //        }
+        //}
+
+        //int countPaths(int[,] a, int n, int l)
+        //{
+        //    int paths = 0;
+        //    int[,] b = new int[n, n];
+        //    Array.Copy(a, b, a.Length);
+        //    for (int i = 0; i < l - 2; i++)
+        //        b = MultiplicationMatrixD(b, a);
+
+        //    var c = MultiplicationMatrixD(b, a);
+        //    int[,] x = new int[n, n];
+        //    for (int i = 0; i < n; i++)
+        //        for (int j = 0; j < n; j++)
+        //            x[i, j] = c[i, j] - b[i, j];
+
+        //    for (int i = 0; i < n; i++)
+        //        for (int j = i + 1; j < n; j++)
+        //            if (x[i, j] == 1)
+        //                paths += 1;
+
+        //    return paths;
+        //}
+
+        public int[,] ToWeightMatrix()
+        {
+            List<int> ids = new List<int>();
+            var v = root;
+            while (v != null)
+            {
+                ids.Add(v.Key);
+                v = v.Next;
+            }
+            int[,] a = new int[ids.Count, ids.Count];
+            v = root;
+            while (v != null)
+            {
+                var t = v.Trail;
+                while (t != null)
+                {
+                    a[ids.IndexOf(v.Key), ids.IndexOf(t.Id.Key)] = t.Weight;
+                    t = t.Next;
+                }
+                v = v.Next;
+            }
+            return a;
+        }
+
         public Tuple<int, int>[] ToAdjacencyList()
         {
             throw new NotImplementedException();
@@ -377,16 +612,40 @@ namespace EditGraph
                 {
                     if (!t.Direct)
                         if (undirectEdgesF.Contains(t.Id.Key))
-                            if (undirectEdgesT.Contains(t.Id.Key))
+                            if (undirectEdgesT.Contains(v.Key))
                             {
                                 t = t.Next;
-                                break;
+                                continue;
                             }
-                    if (t.Direct)
+                    if (!t.Direct)
                     {
                         undirectEdgesF.Add(v.Key);
                         undirectEdgesT.Add(t.Id.Key);
                     }
+                    a[ids.IndexOf(v.Key), ids.IndexOf(t.Id.Key)]++;
+                    t = t.Next;
+                }
+                v = v.Next;
+            }
+            return a;
+        }
+
+        public int[,] ToAdjacencyMatrix2()
+        {
+            List<int> ids = new List<int>();
+            var v = root;
+            while (v != null)
+            {
+                ids.Add(v.Key);
+                v = v.Next;
+            }
+            int[,] a = new int[ids.Count, ids.Count];
+            v = root;
+            while (v != null)
+            {
+                var t = v.Trail;
+                while (t != null)
+                {
                     a[ids.IndexOf(v.Key), ids.IndexOf(t.Id.Key)]++;
                     t = t.Next;
                 }

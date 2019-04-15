@@ -72,6 +72,9 @@
       <DependentUpon>GraphContainer.xaml</DependentUpon>
     </Compile>
     <Compile Include="LengthConverter.cs" />
+    <Compile Include="TextOutputWindow.xaml.cs">
+      <DependentUpon>TextOutputWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Vertex.xaml.cs">
       <DependentUpon>Vertex.xaml</DependentUpon>
     </Compile>
@@ -107,6 +110,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="TextOutputWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Vertex.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

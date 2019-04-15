@@ -51,22 +51,38 @@ namespace GraphWork
             //graphContainer.AddEdge(3, 8, true, 2);
             //graphContainer.AddVertex(9);
             //graphContainer.AddEdge(1, 9, true, 3);
+
+            //graphContainer.AddVertex(2);
+            //graphContainer.AddEdge(1, 2, false, 2);
+            //graphContainer.AddVertex(3);
+            //graphContainer.AddEdge(1, 3, false, 2);
+            //graphContainer.AddVertex(4);
+            //graphContainer.AddEdge(1, 4, false, 2);
+            //graphContainer.AddVertex(5);
+            //graphContainer.AddEdge(2, 5, false, 2);
+            //graphContainer.AddVertex(6);
+            //graphContainer.AddEdge(5, 6, false, 2);
+            //graphContainer.AddVertex(7);
+            //graphContainer.AddEdge(3, 7, false, 2);
+            //graphContainer.AddVertex(8);
+            //graphContainer.AddEdge(3, 8, false, 2);
+            //graphContainer.AddVertex(9);
+            //graphContainer.AddEdge(2, 9, false, 2);
+
             graphContainer.AddVertex(2);
-            graphContainer.AddEdge(1, 2, false, 2);
             graphContainer.AddVertex(3);
-            graphContainer.AddEdge(1, 3, false, 2);
             graphContainer.AddVertex(4);
-            graphContainer.AddEdge(1, 4, false, 2);
             graphContainer.AddVertex(5);
-            graphContainer.AddEdge(2, 5, false, 2);
             graphContainer.AddVertex(6);
-            graphContainer.AddEdge(5, 6, false, 2);
-            graphContainer.AddVertex(7);
-            graphContainer.AddEdge(3, 7, false, 2);
-            graphContainer.AddVertex(8);
-            graphContainer.AddEdge(3, 8, false, 2);
-            graphContainer.AddVertex(9);
-            graphContainer.AddEdge(2, 9, false, 2);
+            graphContainer.AddEdge(1, 2, true, 3);
+            graphContainer.AddEdge(1, 3, true, 2);
+            graphContainer.AddEdge(2, 3, true, 2);
+            graphContainer.AddEdge(2, 4, true, 3);
+            graphContainer.AddEdge(3, 5, true, 2);
+            graphContainer.AddEdge(4, 5, true, 4);
+            graphContainer.AddEdge(5, 6, true, 2);
+            graphContainer.AddEdge(4, 6, true, 3);
+
             CBFirst.SelectedIndex = 0;
             CBSecond.SelectedIndex = 1;
         }
@@ -125,6 +141,35 @@ namespace GraphWork
         {
             var nper = graphContainer.GetNPereferial(int.Parse(nperIDTB.Text), int.Parse(nperLengthTB.Text));
             nperLB.ItemsSource = nper;
+        }
+
+        public void RunFloid(object sender, RoutedEventArgs e)
+        {
+            List<List<string>> lines = new List<List<string>>();
+            var a = graphContainer.GetFloidMatrix();
+            for (int i = 0; i < a.GetLength(0); i++)
+            {
+                List<string> line = new List<string>();
+                for (int j = 0; j < a.GetLength(1); j++)
+                    line.Add(a[i, j].ToString());
+                lines.Add(line);
+            }
+            TextOutputWindow tow = new TextOutputWindow("Флойд", lines);
+            tow.Show();
+        }
+
+        public void RunFindPaths(object sender, RoutedEventArgs e)
+        {
+            var list = graphContainer.GetPaths(int.Parse(pathFromTB.Text), int.Parse(pathToTB.Text), int.Parse(pathLngTB.Text));
+            TextOutputWindow tow = new TextOutputWindow("Пути", list);
+            tow.Show();
+        }
+
+        public void RunFindFlow(object sender, RoutedEventArgs e)
+        {
+            var list = graphContainer.GetFlow(int.Parse(flowFromTB.Text), int.Parse(flowToTB.Text));
+            TextOutputWindow tow = new TextOutputWindow("Поток", list);
+            tow.Show();
         }
     }
 }

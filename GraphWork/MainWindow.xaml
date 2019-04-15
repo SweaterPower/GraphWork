@@ -87,6 +87,29 @@
                 <TextBox x:Name="nperLengthTB"/>
             </DockPanel>
             <ListBox x:Name="nperLB"/>
+            <Button Padding="10" Click="RunFloid">Алгоритм Флойда</Button>
+            <Button Padding="10" Click="RunFindPaths">Пути между вершинами</Button>
+            <DockPanel LastChildFill="True">
+                <TextBlock Text="От: "/>
+                <TextBox x:Name="pathFromTB"/>
+            </DockPanel>
+            <DockPanel LastChildFill="True">
+                <TextBlock Text="До: "/>
+                <TextBox x:Name="pathToTB"/>
+            </DockPanel>
+            <DockPanel LastChildFill="True">
+                <TextBlock Text="Длина: "/>
+                <TextBox x:Name="pathLngTB"/>
+            </DockPanel>
+            <Button Padding="10" Click="RunFindFlow">Макс. поток</Button>
+            <DockPanel LastChildFill="True">
+                <TextBlock Text="От: "/>
+                <TextBox x:Name="flowFromTB"/>
+            </DockPanel>
+            <DockPanel LastChildFill="True">
+                <TextBlock Text="До: "/>
+                <TextBox x:Name="flowToTB"/>
+            </DockPanel>
         </StackPanel>
     </Grid>
 </Window>

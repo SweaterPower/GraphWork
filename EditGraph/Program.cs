@@ -95,7 +95,7 @@ namespace EditGraph
             //Console.WriteLine(g.DeleteUndirectEdge(2, 4));
             Console.WriteLine(g.AddVertex(2));
             Console.WriteLine(g.AddVertex(3));
-            Console.WriteLine(g.AddDirectEdge(1, 2, 0));
+            Console.WriteLine(g.AddUndirectEdge(1, 2, 0));
             Console.WriteLine(g.AddDirectEdge(2, 3, 0));
             Console.WriteLine(g.AddDirectEdge(1, 3, 0));
             Console.Write(g.ToString());

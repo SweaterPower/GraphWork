@@ -466,6 +466,39 @@ namespace GraphWork
             return ret;
         }
 
+        public int[,] GetFloidMatrix()
+        {
+            return graph.Floid();
+        }
+
+        public List<string> GetPaths(int from, int to, int length)
+        {
+            List<string> ret = new List<string>();
+            var path = graph.PathsBetween(from, to);
+            ret.Add("Кол-во путей длины " + length + ": " + path[length - 1]);
+            ret.Add("Общее кол-во путей: " + path.Sum());
+            ret.Add("Длина кратчайшего пути: " + graph.ShortestPathBetween(from, to));
+            return ret;
+        }
+
+        public List<string> GetFlow(int from, int to)
+        {
+            List<string> ret = new List<string>();
+            List <List<int>> chains = new List<List<int>>();
+            var flow = graph.ProcMaxFlow(from, to, ref chains);
+            ret.Add(flow.ToString());
+            foreach (var chain in chains)
+            {
+                string s = "";
+                foreach (var val in chain)
+                {
+                    s += (val+1).ToString() + " ";
+                }
+                ret.Add(s);
+            }
+            return ret;
+        }
+
         public void Changed(object sender, PropertyChangedEventArgs e)
         {
             Vertex source = sender as Vertex;
