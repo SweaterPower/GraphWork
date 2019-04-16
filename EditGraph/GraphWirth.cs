@@ -474,7 +474,7 @@ namespace EditGraph
             return Floid()[from, to];
         }
 
-        public int ProcMaxFlow(int s, int t, ref List<List<int>> chains)
+        public int ProcMaxFlow(int s, int t, ref List<List<int>> chains, ref List<Tuple<int, int>> minCut)
         {
             var S = Find(s);
             if (S == null) return -1;
@@ -493,40 +493,110 @@ namespace EditGraph
             t = ids.IndexOf(t);
 
             var capacity = ToWeightMatrix();
-            return maxFlow(capacity, s, t, ref chains);
-        }
-
-        int maxFlow(int[,] cap, int s, int t, ref List<List<int>> chains)
-        {
-            for (int flow = 0; ;)
+            int flow = fordFulkerson(capacity, s, t, capacity.GetLength(0), ref chains, ref minCut);
+            List<int> mins = new List<int>();
+            capacity = ToWeightMatrix();
+            foreach (var chain in chains.Skip(1))
             {
-                List<int> chain = new List<int>();
-                int df = findPath(cap, new bool[cap.GetLength(0)], s, t, int.MaxValue, ref chain);
-                chains.Add(chain);
-                if (df == 0)
-                    return flow;
-                flow += df;
+                int min = int.MaxValue;
+                int last = chain[0];
+                int ind = 0;
+                for (int i = 1; i < chain.Count; i++)
+                {
+                    int tmp = capacity[last, chain[i]];
+                    if (tmp < min)
+                    {
+                        min = tmp;
+                        ind = i - 1;
+                    }
+                    last = chain[i];
+                }
+                if (minCut.FirstOrDefault((c) => { return c.Item1 == chain[ind + 1]; }) == null)
+                {
+                    mins.Add(min);
+                    minCut.Add(new Tuple<int, int>(chain[ind], chain[ind + 1]));
+                }
             }
+            minCut.Add(new Tuple<int, int>(mins.Sum(), 0));
+            return flow;
         }
 
-        int findPath(int[,] cap, bool[] vis, int u, int t, int f, ref List<int> chain)
+        bool bfs(int[,] graph, int s, int t, ref int[] parent, int V) // поиск в ширину
         {
-            if (u == t)
-                return f;
-            vis[u] = true;
-            for (int v = 0; v < vis.Length; v++)
-                if (!vis[v] && cap[u,v] > 0)
+            bool[] visited = new bool[V];
+
+            Queue<int> q = new Queue<int>();
+            q.Enqueue(s);
+            visited[s] = true;
+            parent[s] = -1;
+
+            while (q.Count != 0)
+            {
+                int u = q.Dequeue();
+
+                for (int v = 0; v < V; v++)
                 {
-                    int df = findPath(cap, vis, v, t, Math.Min(f, cap[u,v]), ref chain);
-                    if (df > 0)
+                    if (visited[v] == false && graph[u, v] > 0)
                     {
-                        chain.Add(v);
-                        cap[u,v] -= df;
-                        cap[v,u] += df;
-                        return df;
+                        q.Enqueue(v);
+                        parent[v] = u;
+                        visited[v] = true;
                     }
                 }
-            return 0;
+            }
+
+            return (visited[t] == true);
+        }
+
+
+        int fordFulkerson(int[,] graph, int s, int t, int V, ref List<List<int>> chains, ref List<Tuple<int, int>> minCut) // алгоритм нахождения максимального потока
+        {
+            int u, v;
+            int[] parent = new int[V];
+            int max_flow = 0;
+            List<int> chain2 = new List<int>();
+            //List<int> mins = new List<int>();
+            while (bfs(graph, s, t, ref parent, V))
+            {
+                List<int> chain = new List<int>();
+                chain.Add(t);
+                int path_flow = int.MaxValue;
+                for (v = t; v != s; v = parent[v])
+                {
+                    u = parent[v];
+                    path_flow = Math.Min(path_flow, graph[u, v]);
+                    chain.Add(u);
+                }
+
+                for (v = t; v != s; v = parent[v])
+                {
+                    u = parent[v];
+                    graph[u, v] -= path_flow;
+                }
+                chain2.Add(path_flow);
+                chain.Reverse();
+                chains.Add(chain);
+                max_flow += path_flow;
+
+                //int min = int.MaxValue;
+                //int last = chain[0];
+                //int ind = 0;
+                //for (int i = 1; i < chain.Count; i++)
+                //{
+                //    int tmp = graph[last, chain[i]];
+                //    if (tmp > 0 && tmp < min)
+                //    {
+                //        min = tmp;
+                //        ind = i-1;
+                //    }
+                //    last = chain[i];
+                //}
+                //mins.Add(min);
+                //minCut.Add(new Tuple<int, int>(chain[ind], chain[ind + 1]));
+            }
+            chains.Insert(0, chain2);
+            //minCut.Add(new Tuple<int, int>(mins.Sum(), 0));
+            return max_flow;
         }
 
         //void DFS(int[,] a, int i, ref bool[] visited, ref int[,] b)

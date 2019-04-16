@@ -74,14 +74,15 @@ namespace GraphWork
             graphContainer.AddVertex(4);
             graphContainer.AddVertex(5);
             graphContainer.AddVertex(6);
-            graphContainer.AddEdge(1, 2, true, 3);
-            graphContainer.AddEdge(1, 3, true, 2);
-            graphContainer.AddEdge(2, 3, true, 2);
-            graphContainer.AddEdge(2, 4, true, 3);
-            graphContainer.AddEdge(3, 5, true, 2);
-            graphContainer.AddEdge(4, 5, true, 4);
-            graphContainer.AddEdge(5, 6, true, 2);
-            graphContainer.AddEdge(4, 6, true, 3);
+            graphContainer.AddEdge(1, 2, true, 10);
+            graphContainer.AddEdge(1, 3, true, 8);
+            graphContainer.AddEdge(2, 3, true, 14);
+            graphContainer.AddEdge(2, 4, true, 5);
+            graphContainer.AddEdge(3, 5, true, 10);
+            graphContainer.AddEdge(4, 5, true, 3);
+            graphContainer.AddEdge(5, 6, true, 12);
+            graphContainer.AddEdge(4, 6, true, 15);
+            graphContainer.AddEdge(5, 2, true, 2);
 
             CBFirst.SelectedIndex = 0;
             CBSecond.SelectedIndex = 1;

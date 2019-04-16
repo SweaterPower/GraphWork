@@ -484,18 +484,26 @@ namespace GraphWork
         public List<string> GetFlow(int from, int to)
         {
             List<string> ret = new List<string>();
-            List <List<int>> chains = new List<List<int>>();
-            var flow = graph.ProcMaxFlow(from, to, ref chains);
-            ret.Add(flow.ToString());
-            foreach (var chain in chains)
+            List<List<int>> chains = new List<List<int>>();
+            List<Tuple<int, int>> minCut = new List<Tuple<int, int>>();
+            var flow = graph.ProcMaxFlow(from, to, ref chains, ref minCut);
+            ret.Add("Максимальный поток: " + flow.ToString());
+            ret.Add("Увеличивающие цепи:");
+            int index = 0;
+            foreach (var chain in chains.Skip(1))
             {
-                string s = "";
+                string s = chains[0][index].ToString() + ": ";
+                index++;
                 foreach (var val in chain)
                 {
-                    s += (val+1).ToString() + " ";
+                    s += (val + 1).ToString() + " ";
                 }
                 ret.Add(s);
             }
+            ret.Add("Минимальный разрез:");
+            foreach (var chain in minCut.Take(minCut.Count - 1))
+                ret.Add((chain.Item1+1).ToString() + " " + (chain.Item2 + 1).ToString() + " ");
+            ret.Add("Величина разреза: " + minCut.Last().Item1.ToString());
             return ret;
         }
 
