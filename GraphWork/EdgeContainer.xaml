@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:GraphWork"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <Canvas x:Name="mainCanvas"  Background="Transparent">
+    <!--<Border x:Name="mainCanvas"  Background="Transparent">
             
-    </Canvas>
+    </Border>-->
 </UserControl>

@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:GraphWork"
              mc:Ignorable="d"  x:Name="vertex"
-             d:DesignHeight="20" d:DesignWidth="20">
+             d:DesignHeight="20" d:DesignWidth="20"  PreviewMouseDown="Thumb_PreviewMouseDown">
     <Canvas Width="{Binding ElementName=vertex, Path=Diameter}" Height="{Binding ElementName=vertex, Path=Diameter}">
         <Ellipse Width="{Binding ElementName=vertex, Path=Diameter}" Height="{Binding ElementName=vertex, Path=Diameter}" x:Name="VertexEl" Fill="Orange"/>
         <!--TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" 

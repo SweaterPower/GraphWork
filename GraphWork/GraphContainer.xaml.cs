@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using EditGraph;
 
 namespace GraphWork
@@ -20,16 +21,18 @@ namespace GraphWork
          увеличение части изображения? (нинад)
          автоматическая расстановка вершин
          */
+        public MainWindow parent;
         public GraphContainer()
         {
             InitializeComponent();
+            parent = Application.Current.MainWindow as MainWindow;
             graph = new GraphWirth(1);
             mainCanvas.SizeChanged += mainCanvas_SizeChanged;
         }
 
         void AddVertexVisual(int key, int value, object data = null)
         {
-            Vertex v = new Vertex();
+            Vertex v = new Vertex(this);
             v.PropertyChanged += Changed;
             mainCanvas.Children.Add(v);
             //UpdateIndexes();
@@ -53,7 +56,7 @@ namespace GraphWork
                 var toVertex = vertexes.FirstOrDefault((v) => { return v.Item1 == to; });
                 if (fromVertex != null && toVertex != null)
                 {
-                    EdgeContainer l = new EdgeContainer(fromVertex.Item2, toVertex.Item2, mainCanvas, direct, weight);
+                    EdgeContainer l = new EdgeContainer(fromVertex.Item2, toVertex.Item2, mainCanvas, this, direct, weight);
                     mainCanvas.Children.Add(l);
                     edges.Add(new Tuple<int, int>(from, to), new Tuple<EdgeContainer, bool>(l, true));
                     edges.Add(new Tuple<int, int>(to, from), new Tuple<EdgeContainer, bool>(l, false));
@@ -156,7 +159,7 @@ namespace GraphWork
             List<UIElement> points = new List<UIElement>();
             foreach (var child in mainCanvas.Children)
             {
-                var tmp = child as EdgeContainer;
+                var tmp = child as EdgeShape;
                 if (tmp == null)
                 {
                     points.Add((UIElement)child);
@@ -560,6 +563,11 @@ namespace GraphWork
                 return;
             }
             UpdateVertexesLayout();
+        }
+
+        public void MyMouseDown(object sender, MouseButtonState state)
+        {
+            parent.MyMouseDown(sender, state);
         }
     }
 }

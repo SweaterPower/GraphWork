@@ -29,9 +29,11 @@ namespace GraphWork
          собственно выделение
              */
 
-        public Vertex()
+        GraphContainer parent;
+        public Vertex(GraphContainer p)
         {
             InitializeComponent();
+            parent = p;
             X = 10;
             Y = 10;
             OnXChanged += UpdateX;
@@ -107,6 +109,11 @@ namespace GraphWork
         {
             X += e.HorizontalChange;
             Y += e.VerticalChange;
+        }
+
+        private void Thumb_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            parent.MyMouseDown(this, e.LeftButton);
         }
     }
 }

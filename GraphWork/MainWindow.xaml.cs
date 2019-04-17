@@ -123,6 +123,14 @@ namespace GraphWork
                 graphContainer.DeleteEdge(from.Item1, to.Item1);
         }
 
+        public void EditVertex(object sender, RoutedEventArgs e)
+        {
+        }
+
+        public void EditEdge(object sender, RoutedEventArgs e)
+        {
+        }
+
         //Лабораторная 2 задание 3 (часть 1)
         public void RootsOfSpannigTrees(object sender, RoutedEventArgs e)
         {
@@ -171,6 +179,34 @@ namespace GraphWork
             var list = graphContainer.GetFlow(int.Parse(flowFromTB.Text), int.Parse(flowToTB.Text));
             TextOutputWindow tow = new TextOutputWindow("Поток", list);
             tow.Show();
+        }
+
+        public void MyMouseDown(object sender, MouseButtonState state)
+        {
+            var vertex = sender as Vertex;
+            if (vertex != null)
+            {
+                TBEditValue.Text = vertex.Info;
+                deleteVertexCB.SelectedItem = graphContainer.vertexes.FirstOrDefault((a) => { return ReferenceEquals(vertex, a.Item2); });
+                if (state == MouseButtonState.Pressed)
+                {
+                    CBFirst.SelectedItem = graphContainer.vertexes.FirstOrDefault((a) => { return ReferenceEquals(vertex, a.Item2); });
+                }
+                else
+                {
+                    CBSecond.SelectedItem = graphContainer.vertexes.FirstOrDefault((a) => { return ReferenceEquals(vertex, a.Item2); });
+                }
+            }
+            var edge = sender as EdgeContainer;
+            if (edge != null)
+            {
+                CBEditFirst.SelectedItem = graphContainer.vertexes.FirstOrDefault((a) => { return ReferenceEquals(edge.from, a.Item2); });
+                CBEditSecond.SelectedItem = graphContainer.vertexes.FirstOrDefault((a) => { return ReferenceEquals(edge.to, a.Item2); });
+                editHasArrow.IsChecked = edge.direct;
+                editWeightTB.Text = edge.weight.ToString();
+                deleteEdgeCBFirst.SelectedItem = graphContainer.vertexes.FirstOrDefault((a) => { return ReferenceEquals(edge.from, a.Item2); });
+                deleteEdgeCBSecond.SelectedItem = graphContainer.vertexes.FirstOrDefault((a) => { return ReferenceEquals(edge.to, a.Item2); });
+            }
         }
     }
 }

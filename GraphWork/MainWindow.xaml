@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GraphWork"
         mc:Ignorable="d"
-        Title="MainWindow" Height="500" Width="700">
+        Title="MainWindow" Height="600" Width="800">
     <Window.Resources>
         <local:LengthConverter x:Key="LengthConverter" />
     </Window.Resources>
@@ -18,29 +18,15 @@
             <ColumnDefinition Width="3*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Grid Grid.Column="0" Grid.RowSpan="2">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <Button Content="Add vertex" Click="AddVertex"/>
+        <StackPanel Grid.Column="0" Grid.RowSpan="2">
+            <Button Padding="10" Content="Add vertex" Click="AddVertex"/>
             <StackPanel Grid.Row="1">
-                <!--<DockPanel LastChildFill="True">
-                    <TextBlock Text="Key: "/>
-                    <TextBox x:Name="TBKey"/>
-                </DockPanel>-->
                 <DockPanel LastChildFill="True">
                     <TextBlock Text="Value: "/>
                     <TextBox x:Name="TBValue"/>
                 </DockPanel>
             </StackPanel>
-            <Button Content="Add edge" Click="AddEdge" Grid.Row="2"/>
+            <Button Padding="10" Content="Add edge" Click="AddEdge" Grid.Row="2"/>
             <StackPanel Grid.Row="3">
                 <ComboBox x:Name="CBFirst"/>
                 <ComboBox x:Name="CBSecond"/>
@@ -52,16 +38,35 @@
                     <TextBox x:Name="weightTB"/>
                 </DockPanel>
             </StackPanel>
+            <Button Padding="10" Content="Edit vertex" Click="EditVertex"/>
+            <StackPanel Grid.Row="1">
+                <DockPanel LastChildFill="True">
+                    <TextBlock Text="Value: "/>
+                    <TextBox x:Name="TBEditValue"/>
+                </DockPanel>
+            </StackPanel>
+            <Button Padding="10" Content="Edit edge" Click="EditEdge" Grid.Row="2"/>
+            <StackPanel Grid.Row="3">
+                <ComboBox x:Name="CBEditFirst"/>
+                <ComboBox x:Name="CBEditSecond"/>
+            </StackPanel>
+            <StackPanel Grid.Row="4">
+                <CheckBox x:Name="editHasArrow" Content="is direct"/>
+                <DockPanel>
+                    <TextBlock Text="Weight: "/>
+                    <TextBox x:Name="editWeightTB"/>
+                </DockPanel>
+            </StackPanel>
             <StackPanel Grid.Row="5">
-                <Button Content="Delete vertex" Click="DeleteVertex"/>
+                <Button Padding="10" Content="Delete vertex" Click="DeleteVertex"/>
                 <ComboBox x:Name="deleteVertexCB"/>
             </StackPanel>
-            <Button Content="Delete edge" Click="DeleteEdge" Grid.Row="6"/>
+            <Button Padding="10" Content="Delete edge" Click="DeleteEdge" Grid.Row="6"/>
             <StackPanel Grid.Row="7">
                 <ComboBox x:Name="deleteEdgeCBFirst"/>
                 <ComboBox x:Name="deleteEdgeCBSecond"/>
             </StackPanel>
-        </Grid>
+        </StackPanel>
         <local:GraphContainer x:Name="graphContainer" Grid.RowSpan="2" Grid.Column="1">
         </local:GraphContainer>
         <StackPanel Grid.Column="2">

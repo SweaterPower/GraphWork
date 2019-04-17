@@ -290,8 +290,8 @@ namespace GraphWork
             double Bx = X2 + modifier * cosa;
             double By = Y2 + modifier * sina;
 
-            TopX = (Ax + Bx) / 2;
-            TopY = (Ay + By) / 2;
+            TopX = (X1 + X2) / 2;
+            TopY = (Y1 + Y2) / 2;
 
             Point pt0 = new Point(X1, Y1);
             Point pt5 = new Point(X2, Y2);

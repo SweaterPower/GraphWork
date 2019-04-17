@@ -6,9 +6,9 @@
              xmlns:local="clr-namespace:GraphWork"
              mc:Ignorable="d" x:Name="EI"
              d:DesignHeight="20" d:DesignWidth="30">
-    <StackPanel Width="30" Height="20">
-    <TextBlock x:Name="mainTB"  Text="{Binding Path=Txt, ElementName=EI}" Background="Transparent" FontSize="14" FontWeight="Bold">
+    <Border Width="30" Height="20" CornerRadius="55" BorderThickness="1">
+    <TextBlock x:Name="mainTB"  Text="{Binding Path=Txt, ElementName=EI}" FontSize="14" TextAlignment="Center" FontWeight="Bold" Background="LightBlue">
             
     </TextBlock>
-    </StackPanel>
+    </Border>
 </UserControl>
