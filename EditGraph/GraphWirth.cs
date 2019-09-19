@@ -324,6 +324,10 @@ namespace EditGraph
                         {
                             previous.Next = next;
                         }
+                        else
+                        {
+                            previous.Next = null;
+                        }
                     }
                     return true;//вы восхитительны
                 }
@@ -511,11 +515,11 @@ namespace EditGraph
                     }
                     last = chain[i];
                 }
-                if (minCut.FirstOrDefault((c) => { return c.Item1 == chain[ind + 1]; }) == null)
-                {
+                //if (minCut.FirstOrDefault((c) => { return c.Item1 == chain[ind + 1]; }) == null)
+                //{
                     mins.Add(min);
                     minCut.Add(new Tuple<int, int>(chain[ind], chain[ind + 1]));
-                }
+                //}
             }
             minCut.Add(new Tuple<int, int>(mins.Sum(), 0));
             return flow;

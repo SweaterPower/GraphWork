@@ -35,6 +35,10 @@ namespace GraphWork
             deleteEdgeCBFirst.DisplayMemberPath = "Item2.Info";
             deleteEdgeCBSecond.ItemsSource = graphContainer.vertexes;
             deleteEdgeCBSecond.DisplayMemberPath = "Item2.Info";
+            CBEditFirst.ItemsSource = graphContainer.vertexes;
+            CBEditFirst.DisplayMemberPath = "Item2.Info";
+            CBEditSecond.ItemsSource = graphContainer.vertexes;
+            CBEditSecond.DisplayMemberPath = "Item2.Info";
             //graphContainer.AddVertex(2);
             //graphContainer.AddEdge(1, 2, true, 1);
             //graphContainer.AddVertex(3);
